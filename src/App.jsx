@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform, useMotionValueEvent, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, ChevronRight, X, RotateCcw, Sparkles, Star, Plus, Minus, Check, ArrowRight } from 'lucide-react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+// Register GSAP ScrollTrigger Plugin
+gsap.registerPlugin(ScrollTrigger);
 
 // Import local assets
 import cookieHero from './assets/cookie_hero.png';
@@ -21,10 +26,7 @@ const FLAVORS = [
 
 export default function App() {
   const containerRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  });
+  const cookieRef = useRef(null);
 
   const [isMobile, setIsMobile] = useState(false);
   const [activeSection, setActiveSection] = useState(0);
@@ -47,30 +49,70 @@ export default function App() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Monitor Scroll Progress to Change Section States
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    if (latest < 0.18) setActiveSection(0); // Hero
-    else if (latest < 0.38) setActiveSection(1); // Ingredients
-    else if (latest < 0.60) setActiveSection(2); // Flavours
-    else if (latest < 0.82) setActiveSection(3); // Story
-    else setActiveSection(4); // Order CTA
-  });
+  // GSAP ScrollTrigger Integration
+  useEffect(() => {
+    const isMob = window.innerWidth < 768;
 
-  // Rolling Cookie Animators
-  // Map scroll progress to horizontal offsets (-1 to 1)
-  const xRaw = useTransform(scrollYProgress, [0, 0.16, 0.36, 0.58, 0.80, 0.95, 1.0], [0, 0.9, -0.9, 0.9, -0.85, 0, 0]);
-  const x = useTransform(xRaw, val => `${val * (isMobile ? 0 : 26)}vw`);
+    // Reset and kill previous triggers on re-render / resize
+    ScrollTrigger.getAll().forEach(t => t.kill());
 
-  // Map vertical viewport offset (vh)
-  const yRaw = useTransform(scrollYProgress, [0, 0.16, 0.36, 0.58, 0.80, 0.95, 1.0], [16, 26, 20, 28, 16, 12, 16]);
-  const y = useTransform(yRaw, val => `${val * (isMobile ? 0.72 : 1)}vh`);
+    // Create the master timeline tied to page scroll progress
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 1.2, // inertia physics
+      }
+    });
 
-  // Map scale properties
-  const scaleRaw = useTransform(scrollYProgress, [0, 0.16, 0.36, 0.58, 0.80, 0.95, 1.0], [2.1, 1.45, 1.25, 1.35, 1.1, 0.8, 0.75]);
-  const scale = useTransform(scaleRaw, val => val * (isMobile ? 0.62 : 1));
+    // Define positions (y: viewport offset, x: translation offset, scale, rotation)
+    tl.to(cookieRef.current, {
+      x: isMob ? '0vw' : '26vw',
+      y: isMob ? '11vh' : '26vh',
+      scale: isMob ? 0.62 : 1.45,
+      rotation: 360,
+      ease: 'none',
+    })
+    .to(cookieRef.current, {
+      x: isMob ? '0vw' : '-26vw',
+      y: isMob ? '11vh' : '20vh',
+      scale: isMob ? 0.55 : 1.25,
+      rotation: 720,
+      ease: 'none',
+    })
+    .to(cookieRef.current, {
+      x: isMob ? '0vw' : '26vw',
+      y: isMob ? '11vh' : '28vh',
+      scale: isMob ? 0.62 : 1.35,
+      rotation: 1080,
+      ease: 'none',
+    })
+    .to(cookieRef.current, {
+      x: '0vw',
+      y: isMob ? '6vh' : '16vh',
+      scale: isMob ? 0.5 : 0.8,
+      rotation: 1440,
+      ease: 'none',
+    });
 
-  // Continual scroll-linked rotation
-  const rotate = useTransform(scrollYProgress, [0, 1.0], [0, 1440]);
+    // Bind section ScrollTriggers to set active navigation index
+    const sections = ['#hero', '#ingredients', '#flavours', '#story', '#order'];
+    sections.forEach((id, idx) => {
+      ScrollTrigger.create({
+        trigger: id,
+        start: 'top 40%',
+        end: 'bottom 40%',
+        onToggle: self => {
+          if (self.isActive) setActiveSection(idx);
+        }
+      });
+    });
+
+    return () => {
+      ScrollTrigger.getAll().forEach(t => t.kill());
+    };
+  }, [isMobile]);
 
   // Toast Helper
   const triggerToast = (msg) => {
@@ -159,10 +201,10 @@ export default function App() {
           <span className="bg-[#c87a30] text-[#fcf9f2] text-[10px] font-sans px-1.5 py-0.5 rounded font-semibold tracking-wider uppercase">Artisan</span>
         </a>
         <ul className="hidden md:flex items-center space-x-8 font-sans font-medium text-sm text-[#3d2314]/80">
-          <li><a href="#ingredients" className={`hover:text-[#c87a30] transition ${activeSection === 1 ? 'text-[#c87a30]' : ''}`}>Ingredients</a></li>
-          <li><a href="#flavours" className={`hover:text-[#c87a30] transition ${activeSection === 2 ? 'text-[#c87a30]' : ''}`}>Flavours</a></li>
-          <li><a href="#story" className={`hover:text-[#c87a30] transition ${activeSection === 3 ? 'text-[#c87a30]' : ''}`}>Our Story</a></li>
-          <li><a href="#order" className={`hover:text-[#c87a30] transition ${activeSection === 4 ? 'text-[#c87a30]' : ''}`}>Build a Box</a></li>
+          <li><a href="#ingredients" className={`hover:text-[#c87a30] transition-colors ${activeSection === 1 ? 'text-[#c87a30]' : ''}`}>Ingredients</a></li>
+          <li><a href="#flavours" className={`hover:text-[#c87a30] transition-colors ${activeSection === 2 ? 'text-[#c87a30]' : ''}`}>Flavours</a></li>
+          <li><a href="#story" className={`hover:text-[#c87a30] transition-colors ${activeSection === 3 ? 'text-[#c87a30]' : ''}`}>Our Story</a></li>
+          <li><a href="#order" className={`hover:text-[#c87a30] transition-colors ${activeSection === 4 ? 'text-[#c87a30]' : ''}`}>Build a Box</a></li>
         </ul>
         <button 
           onClick={() => setIsCartOpen(true)}
@@ -177,18 +219,18 @@ export default function App() {
         </button>
       </nav>
 
-      {/* ── SCROLL-LINKED FLOATING ROLLING COOKIE ── */}
+      {/* ── SCROLL-LINKED FLOATING ROLLING COOKIE (GSAP TARGET) ── */}
       <div className="fixed inset-0 pointer-events-none z-30 overflow-hidden">
-        <motion.div
-          style={{ x, y, scale, rotate }}
-          className="absolute left-[calc(50%-120px)] top-0 w-[240px] h-[240px] flex items-center justify-center"
+        <div
+          ref={cookieRef}
+          className="absolute left-[calc(50%-120px)] top-0 w-[240px] h-[240px] flex items-center justify-center translate-y-[-100vh] scale-[2]"
         >
           <img 
             src={cookieHero} 
             alt="Artisan Chocolate Chip Cookie" 
             className="w-full h-full object-contain filter drop-shadow-[0_20px_40px_rgba(61,35,20,0.3)] select-none pointer-events-none" 
           />
-        </motion.div>
+        </div>
       </div>
 
       {/* ── SECTION 1: HERO (0% to 20%) ── */}
@@ -209,7 +251,7 @@ export default function App() {
             <div className="flex flex-col sm:flex-row gap-4">
               <a 
                 href="#order"
-                className="bg-[#3d2314] hover:bg-[#c87a30] text-[#fcf9f2] font-semibold px-8 py-3.5 rounded-full transition shadow-lg shadow-[#3d2314]/10 text-center font-sans tracking-wide text-sm flex items-center justify-center space-x-2"
+                className="bg-[#3d2314] hover:bg-[#c87a30] text-[#fcf9f2] font-semibold px-8 py-3.5 rounded-full transition shadow-lg shadow-[#3d2314]/10 text-center font-sans tracking-wide text-sm flex items-center justify-center space-x-2 animate-pulse"
               >
                 <span>Curate Custom Box</span>
                 <ChevronRight size={16} />
@@ -223,7 +265,6 @@ export default function App() {
             </div>
           </div>
           <div className="hidden md:flex justify-end pr-12">
-            {/* Ambient target container highlighting where the cookie floats */}
             <div className="w-[300px] h-[300px] border border-[#3d2314]/5 rounded-full flex items-center justify-center relative">
               <div className="absolute inset-4 border border-dashed border-[#c87a30]/10 rounded-full animate-[spin_40s_linear_infinite]" />
               <div className="w-12 h-12 bg-[#c87a30]/5 rounded-full flex items-center justify-center text-[#c87a30]">
@@ -246,9 +287,8 @@ export default function App() {
       <section id="ingredients" className="relative min-h-screen w-full flex items-center px-6 md:px-20 py-20 bg-[#f6f0e2]">
         <div className="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div className="hidden md:block">
-            {/* The cookie floats on this side while scrolling here */}
             <div className="w-[280px] h-[280px] border border-[#3d2314]/5 rounded-full relative mx-auto flex items-center justify-center">
-              <div className="absolute inset-0 border border-dashed border-[#3d2314]/10 rounded-full" />
+              <div className="absolute inset-0 border border-dashed border-[#3d2314]/10 rounded-full animate-[spin_60s_linear_infinite]" />
               <span className="text-xs uppercase font-bold tracking-widest text-[#3d2314]/30">The Golden Standard</span>
             </div>
           </div>
@@ -263,7 +303,7 @@ export default function App() {
             <div className="space-y-6">
               {[
                 { title: 'Slow-Browned Butter', desc: 'Meticulously simmered for over an hour until the milk solids caramelize, giving our dough its deep nutty, butterscotch-like richness.' },
-                { title: 'Single-Origin Belgian Chocolate', desc: 'We folder in huge 72% dark chocolate chunks that liquefy into rich lava pockets, balanced with thin shards of sweet white chocolate.' },
+                { title: 'Single-Origin Belgian Chocolate', desc: 'We fold in huge 72% dark chocolate chunks that liquefy into rich lava pockets, balanced with thin shards of sweet white chocolate.' },
                 { title: 'Hand-Harvested Fleur de Sel', desc: 'Crisp flakes of sea salt harvested from French salt marshes, delicately sprinkled to brighten cocoa undertones.' }
               ].map((ing, idx) => (
                 <div key={idx} className="bg-[#fcf9f2]/70 backdrop-blur-sm border border-[#3d2314]/5 p-5 rounded-2xl transition hover:border-[#c87a30]/30 group">
@@ -318,7 +358,7 @@ export default function App() {
           ))}
         </div>
         
-        {/* Secondary layout containing other signatures */}
+        {/* Secondary flavors display */}
         <div className="w-full max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
           {FLAVORS.slice(3).map((f) => (
             <div key={f.id} className="bg-[#f6f0e2]/50 border border-[#3d2314]/5 hover:border-[#c87a30]/20 rounded-3xl p-6 flex flex-col sm:flex-row gap-6 transition hover:shadow-lg group">
@@ -386,7 +426,6 @@ export default function App() {
           </div>
 
           <div className="order-1 md:order-2 flex justify-center">
-            {/* Cookie floats here while scrolling this section */}
             <div className="w-[280px] h-[280px] border border-[#3d2314]/5 rounded-full flex items-center justify-center relative">
               <div className="absolute inset-6 border border-dashed border-[#c87a30]/15 rounded-full animate-[spin_50s_linear_infinite]" />
               <div className="w-14 h-14 bg-[#c87a30]/5 rounded-full flex items-center justify-center text-[#c87a30] relative z-10">
@@ -401,7 +440,7 @@ export default function App() {
       <section id="order" className="relative min-h-screen w-full flex flex-col justify-center px-6 md:px-20 py-24 bg-[#fcf9f2] border-t border-[#3d2314]/5">
         <div className="w-full max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
           
-          {/* Customizer Selection Box Mockup */}
+          {/* Customizer Box Visual panel */}
           <div className="md:col-span-7 flex flex-col items-center">
             <div className="w-full max-w-md bg-[#f6f0e2]/40 border border-[#3d2314]/5 rounded-[36px] p-6 relative">
               <span className="absolute top-4 left-6 text-[10px] font-sans font-bold uppercase tracking-widest text-[#3d2314]/40">Bakery Selection Box</span>
@@ -420,7 +459,7 @@ export default function App() {
                       return (
                         <div 
                           key={i} 
-                          className={`aspect-square rounded-full border flex items-center justify-center relative overflow-hidden transition ${
+                          className={`aspect-square rounded-full border flex items-center justify-center relative overflow-hidden transition-all duration-300 ${
                             item ? 'bg-[#fcf9f2] border-[#c87a30] shadow-sm' : 'bg-[#3d2314]/5 border-dashed border-[#3d2314]/15'
                           }`}
                         >
@@ -444,7 +483,7 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Progress and status */}
+              {/* Progress and capacity status */}
               <div className="border-t border-[#3d2314]/5 pt-4">
                 <div className="flex justify-between items-center text-xs font-semibold font-sans mb-1.5">
                   <span className="text-[#3d2314]/60">Box Capacity</span>
@@ -526,7 +565,7 @@ export default function App() {
             {boxFlavors.length > 0 && (
               <button 
                 onClick={() => setBoxFlavors([])}
-                className="w-full text-center text-xs font-bold font-sans text-[#3d2314]/50 hover:text-[#3d2314] mt-4 flex items-center justify-center space-x-1 cursor-pointer transition"
+                className="w-full text-center text-xs font-bold font-sans text-[#3d2314]/50 hover:text-[#3d2314] mt-4 flex items-center justify-center space-x-1 cursor-pointer transition-colors"
               >
                 <RotateCcw size={12} />
                 <span>Reset Box Slots</span>
@@ -549,10 +588,10 @@ export default function App() {
           <div>
             <h4 className="font-bold text-xs uppercase tracking-wider text-[#c87a30] mb-4">Explore</h4>
             <ul className="space-y-2 text-sm text-[#fcf9f2]/80">
-              <li><a href="#ingredients" className="hover:text-[#c87a30] transition">Our Alchemy</a></li>
-              <li><a href="#flavours" className="hover:text-[#c87a30] transition">Core Flavours</a></li>
-              <li><a href="#story" className="hover:text-[#c87a30] transition">Sacred Process</a></li>
-              <li><a href="#order" className="hover:text-[#c87a30] transition">Box Customizer</a></li>
+              <li><a href="#ingredients" className="hover:text-[#c87a30] transition-colors">Our Alchemy</a></li>
+              <li><a href="#flavours" className="hover:text-[#c87a30] transition-colors">Core Flavours</a></li>
+              <li><a href="#story" className="hover:text-[#c87a30] transition-colors">Sacred Process</a></li>
+              <li><a href="#order" className="hover:text-[#c87a30] transition-colors">Box Customizer</a></li>
             </ul>
           </div>
           <div>
@@ -623,7 +662,7 @@ export default function App() {
                       <div key={item.id} className="flex gap-4 p-4 bg-[#f6f0e2]/40 rounded-2xl border border-[#3d2314]/5 relative">
                         <div className="w-16 h-16 rounded-xl bg-white border border-[#3d2314]/5 flex items-center justify-center p-2">
                           {item.image ? (
-                            <img src={item.image} alt={item.name} className="w-full h-full object-contain" />
+                            <img src={item.image} alt={item.name} className="w-full h-full object-contain select-none pointer-events-none" />
                           ) : (
                             <span className="text-3xl">{item.icon}</span>
                           )}
