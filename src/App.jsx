@@ -4,7 +4,7 @@ import { ShoppingBag, ChevronRight, X, RotateCcw, Sparkles, Star, Plus, Minus, C
 
 // Import local assets
 import heroVideo from './assets/Water_drop_falls_on_powder_202605251914.mp4';
-import cookieHero from './assets/cookie_hero.png';
+import cookieRollsVideo from './assets/Chocolate_chip_cookie_rolls_vert_202605270143.mp4';
 import cookieClassic from './assets/cookie_classic.png';
 import cookieDoubleChoc from './assets/cookie_double_choc.png';
 import cookieRedVelvet from './assets/cookie_red_velvet.png';
@@ -152,7 +152,7 @@ export default function App() {
       {/* ── STICKY NAVIGATION BAR ── */}
       <nav className="fixed top-0 left-0 w-full z-50 bg-[#fcf9f2]/80 backdrop-blur-md border-b border-[#3d2314]/5 px-6 py-4 flex items-center justify-between">
         <a href="#hero" className="flex items-center space-x-2 text-[#3d2314]">
-          <span className="font-serif font-bold text-2xl tracking-tight">Crumble &amp; Co.</span>
+          <span className="font-serif font-bold text-2xl tracking-tight">LITTLE BAKES</span>
           <span className="bg-[#c87a30] text-[#fcf9f2] text-[10px] font-sans px-1.5 py-0.5 rounded font-semibold tracking-wider uppercase">Artisan</span>
         </a>
         <ul className="hidden md:flex items-center space-x-8 font-sans font-medium text-sm text-[#3d2314]/80">
@@ -190,6 +190,7 @@ export default function App() {
         
         {/* Warm shadow overlay to enhance text readability */}
         <div className="absolute inset-0 z-10 bg-gradient-to-b from-[#1e0c00]/65 via-[#1e0c00]/40 to-[#1e0c00]/80" />
+        <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_72%_45%,rgba(223,156,77,0.35),transparent_34%)]" />
 
         <div className="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative z-20">
           
@@ -250,28 +251,29 @@ export default function App() {
           {/* Floating Cookie Image (Positioned exactly over the water drop video target) */}
           <div className="flex justify-center md:justify-end pr-6">
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ 
-                opacity: 1, 
-                scale: [1, 1.05, 1],
-                y: [-12, 12, -12],
-                rotate: [-4, 4, -4]
-              }}
-              transition={{
-                opacity: { duration: 0.8 },
-                scale: { duration: 0.8 },
-                y: { repeat: Infinity, duration: 5, ease: "easeInOut" },
-                rotate: { repeat: Infinity, duration: 6, ease: "easeInOut" }
-              }}
-              className="w-[280px] h-[280px] md:w-[380px] md:h-[380px] flex items-center justify-center relative"
+              initial={{ opacity: 0, scale: 0.88, y: 24 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.9, ease: "easeOut" }}
+              className="relative w-[270px] md:w-[360px]"
             >
-              {/* Outer decorative ring */}
-              <div className="absolute inset-0 border border-dashed border-[#c87a30]/30 rounded-full animate-[spin_50s_linear_infinite]" />
-              <img 
-                src={cookieHero} 
-                alt="Signature Cookie" 
-                className="w-4/5 h-4/5 object-contain filter drop-shadow-[0_25px_50px_rgba(0,0,0,0.55)] select-none pointer-events-none"
-              />
+              <div className="absolute -inset-8 rounded-full bg-[#c87a30]/25 blur-3xl" />
+              <div className="absolute -inset-4 rounded-[2.5rem] border border-dashed border-[#df9c4d]/30 animate-[spin_70s_linear_infinite]" />
+              <div className="relative aspect-[9/14] overflow-hidden rounded-[2rem] border border-white/20 bg-[#1e0c00] shadow-[0_34px_90px_rgba(0,0,0,0.48)]">
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="h-full w-full object-cover"
+                >
+                  <source src={cookieRollsVideo} type="video/mp4" />
+                </video>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1e0c00]/45 via-transparent to-white/10" />
+                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between rounded-full border border-white/20 bg-[#1e0c00]/45 px-4 py-2.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-white backdrop-blur-md">
+                  <span>Chocolate roll</span>
+                  <span className="text-[#df9c4d]">Signature</span>
+                </div>
+              </div>
             </motion.div>
           </div>
 
@@ -642,7 +644,7 @@ export default function App() {
       <footer className="bg-[#3d2314] text-[#fcf9f2] px-6 py-16 font-sans border-t border-[#fcf9f2]/10 z-40 relative">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
           <div className="md:col-span-2">
-            <h3 className="font-serif text-3xl font-bold tracking-tight mb-4">Crumble &amp; Co.</h3>
+            <h3 className="font-serif text-3xl font-bold tracking-tight mb-4">LITTLE BAKES</h3>
             <p className="text-sm text-[#fcf9f2]/60 leading-relaxed max-w-sm">
               Artisan luxury baked goods, slow-baked in small batches, crafted for premium culinary indulgence.
             </p>
@@ -665,7 +667,7 @@ export default function App() {
           </div>
         </div>
         <div className="max-w-6xl mx-auto border-t border-[#fcf9f2]/10 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-[#fcf9f2]/40">
-          <p>© 2026 Crumble &amp; Co. Baked to Perfection.</p>
+          <p>© 2026 LITTLE BAKES. Baked to Perfection.</p>
           <div className="flex space-x-6 mt-4 sm:mt-0">
             <a href="#" className="hover:underline">Privacy Policy</a>
             <a href="#" className="hover:underline">Terms of Service</a>
