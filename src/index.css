@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --color-cream-light: #fdfbf7;
+  --color-cream: #fcf9f2;
+  --color-cream-dark: #f6f0e2;
+
+  --color-chocolate-light: #5c3a21;
+  --color-chocolate: #3d2314;
+  --color-chocolate-dark: #271207;
+
+  --color-caramel-light: #df9c4d;
+  --color-caramel: #c87a30;
+  --color-caramel-dark: #a85b18;
+
+  --color-gold: #b48243;
+
+  --font-serif: "Cormorant Garamond", serif;
+  --font-sans: "Outfit", sans-serif;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #fcf9f2;
+  color: #3d2314;
+  scroll-behavior: smooth;
+  font-family: 'Outfit', sans-serif;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6, .font-display {
+  font-family: 'Cormorant Garamond', serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f6f0e2;
+}
+::-webkit-scrollbar-thumb {
+  background: #c87a30;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3d2314;
+}
