@@ -654,9 +654,63 @@
       .story-inner { grid-template-columns: 1fr; gap: 48px; }
       .story-right { display: none; }
     }
+
+    /* ── CUSTOM CURSOR ── */
+    .custom-cursor {
+      position: fixed;
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--caramel);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 10000;
+      opacity: 0;
+      transition: width 0.25s ease, height 0.25s ease, background-color 0.25s ease, opacity 0.3s ease;
+    }
+    .custom-cursor-dot {
+      position: fixed;
+      width: 6px;
+      height: 6px;
+      background-color: var(--caramel);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 10001;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .custom-cursor.hover {
+      width: 50px;
+      height: 50px;
+      background-color: rgba(212, 160, 48, 0.08);
+      border-color: var(--caramel);
+    }
+    .custom-cursor.active {
+      width: 20px;
+      height: 20px;
+      background-color: rgba(212, 160, 48, 0.2);
+    }
+    @media (pointer: fine) {
+      body, a, button, select, input, .qty-btn, .cart-close {
+        cursor: none !important;
+      }
+    }
+
+    /* ── 3D PERSPECTIVE ── */
+    .chapter {
+      perspective: 1200px;
+    }
+    .glass-card {
+      transform-style: preserve-3d;
+      transition: transform 0.2s ease, opacity 0.7s ease, border-color 0.3s ease;
+    }
   </style>
 </head>
 <body>
+  <!-- Custom Cursor Trail -->
+  <div class="custom-cursor" id="custom-cursor"></div>
+  <div class="custom-cursor-dot" id="custom-cursor-dot"></div>
 
 <!-- ── NAVBAR ─────────────────────────────────────────────── -->
 <nav>
@@ -665,9 +719,9 @@
     <span class="nav-brand">Crumble &amp; Co.</span>
   </a>
   <ul class="nav-links">
-    <li><a href="#flavours">Flavours <span class="arrow">▾</span></a></li>
+    <li><a href="#flavours">Flavours</a></li>
+    <li><a href="#customizer">Customizer</a></li>
     <li><a href="#craft">Craft</a></li>
-    <li><a href="#story">Story</a></li>
   </ul>
   <button class="nav-cta" onclick="openCart()">Shop Now</button>
   <button class="nav-cart-btn" onclick="openCart()" aria-label="Cart">
@@ -1063,6 +1117,61 @@
   </div>
 </section>
 
+<!-- Chapter 7: Build-Your-Own Box -->
+<section class="chapter" id="customizer" data-chapter="7">
+  <div class="chapter-bg" style="background: radial-gradient(ellipse at 50% 45%, #2d1508 0%, #110804 55%, #080402 100%);"></div>
+  <div class="chapter-overlay" style="background: rgba(10,5,2,0.40);"></div>
+
+  <!-- Customizer Box Visualization in Center -->
+  <div class="box-visual-panel" style="position: relative; z-index: 2; width: clamp(260px, 32vw, 460px); display: flex; justify-content: center; align-items: center;">
+    <div class="box-wrapper" style="position: relative; width: 100%; aspect-ratio: 1.1; display: flex; justify-content: center; align-items: center;">
+      <img src="assets/cookie_box.png" alt="Bakery Box" class="box-bg-image" style="width:100%; height:auto; filter:drop-shadow(0 25px 45px rgba(0,0,0,0.8));">
+      <div class="slots-overlay slots-grid-6" id="box-slots-grid" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -46%); width:82%; height:66%; display:grid; gap:12px; padding:10px;">
+        <!-- Filled slots or empty slot placeholders will be injected here by JS -->
+      </div>
+    </div>
+  </div>
+
+  <div class="glass-card card-left chapter-card" data-delay="0">
+    <p class="card-eyebrow">Chapter VII</p>
+    <h2 class="card-title">The Alchemist's Selection</h2>
+    <p class="card-desc">Curate your own collection. Choose a size and click the flavors to fill your box with handcrafted gold.</p>
+    <div style="margin-top: 24px;">
+      <span class="card-eyebrow">Status</span>
+      <p class="card-desc" style="margin-top: 6px; font-size:13px; font-weight: 500;">
+        Filled: <strong id="box-fill-count" style="color:var(--caramel);">0</strong> / <strong id="box-max-count">6</strong>
+      </p>
+      <div class="box-progress-container" style="width: 100%; height: 3px; background: rgba(255,255,255,0.05); margin-top: 10px; border-radius: 2px; overflow:hidden;">
+        <div class="box-progress-bar" id="box-progress" style="width: 0%; height: 100%; background: var(--caramel); transition: width 0.3s ease;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="glass-card card-right chapter-card" data-delay="150">
+    <p class="card-eyebrow">Custom Box</p>
+    
+    <div class="customizer-options" style="margin-bottom: 20px;">
+      <div style="display:flex; gap:10px; margin-bottom: 16px;">
+        <button class="size-btn active" id="size-6" onclick="setBoxSize(6, 24.99)" style="flex:1; padding:10px; background:rgba(255,255,255,0.02); border:1px solid var(--caramel); color:var(--caramel); cursor:pointer; font-family:'Outfit', sans-serif; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; transition: all 0.3s ease;">6-Pack · $24.99</button>
+        <button class="size-btn" id="size-12" onclick="setBoxSize(12, 44.99)" style="flex:1; padding:10px; background:rgba(255,255,255,0.02); border:1px solid var(--glass-border); color:var(--cream-dim); cursor:pointer; font-family:'Outfit', sans-serif; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; transition: all 0.3s ease;">12-Pack · $44.99</button>
+      </div>
+      
+      <p class="card-eyebrow" style="margin-bottom:10px;">Select Flavors</p>
+      <div class="flavor-triggers-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+        <button class="btn-ghost" onclick="addFlavorToBox('Classic Chocolate Chip', '🍪')" style="text-align:left; padding:6px; font-size:11px; border:1px solid var(--glass-border);">+ Chocolate Chip</button>
+        <button class="btn-ghost" onclick="addFlavorToBox('Double Chocolate Lava', '🌋')" style="text-align:left; padding:6px; font-size:11px; border:1px solid var(--glass-border);">+ Lava Core</button>
+        <button class="btn-ghost" onclick="addFlavorToBox('Red Velvet White Choc', '❤️')" style="text-align:left; padding:6px; font-size:11px; border:1px solid var(--glass-border);">+ Red Velvet</button>
+        <button class="btn-ghost" onclick="addFlavorToBox('Salted Caramel Pecan', '🍯')" style="text-align:left; padding:6px; font-size:11px; border:1px solid var(--glass-border);">+ Salted Caramel</button>
+        <button class="btn-ghost" onclick="addFlavorToBox('Matcha White Chocolate', '🍵')" style="text-align:left; padding:6px; font-size:11px; border:1px solid var(--glass-border);">+ Matcha</button>
+        <button class="btn-ghost" onclick="addFlavorToBox('Oatmeal Raisin', '🌾')" style="text-align:left; padding:6px; font-size:11px; border:1px solid var(--glass-border);">+ Oatmeal Raisin</button>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="add-box-to-cart" onclick="addCustomBoxToCart()" disabled style="opacity:0.5; transition: all 0.3s ease;">Add Custom Box — $24.99</button>
+    <button class="btn-ghost" onclick="resetCustomBox()">Reset Selection</button>
+  </div>
+</section>
+
 <!-- ── FOOTER ─────────────────────────────────────────────── -->
 <footer>
   <div class="footer-brand">Crumble <em>&amp; Co.</em></div>
@@ -1261,10 +1370,20 @@
     cart.forEach((item, idx) => {
       const div = document.createElement('div');
       div.className = 'cart-item';
+      
+      let flavorsHtml = '';
+      if (item.isCustomBox && item.flavors) {
+        const counts = {};
+        item.flavors.forEach(f => counts[f.name] = (counts[f.name] || 0) + 1);
+        const listText = Object.entries(counts).map(([name, qty]) => `${qty}x ${name.split(' ')[0]}`).join(', ');
+        flavorsHtml = `<div style="font-size:10px; color:var(--cream-dim); opacity:0.8; margin-top:2px;">${listText}</div>`;
+      }
+      
       div.innerHTML = `
         <div class="cart-item-icon" style="background:rgba(180,130,40,0.08)">${item.icon}</div>
         <div class="cart-item-info">
           <div class="cart-item-name">${item.name}</div>
+          ${flavorsHtml}
           <div class="cart-item-price">$${(item.price * item.qty).toFixed(2)}</div>
         </div>
         <div class="cart-item-qty">
@@ -1332,8 +1451,222 @@
 
   document.querySelectorAll('.chapter-card').forEach(el => observer.observe(el));
 
+  // ── CUSTOM BOX BUILDER STATE ──
+  let customBox = {
+    size: 6,
+    price: 24.99,
+    items: []
+  };
+
+  function setBoxSize(size, price) {
+    customBox.size = size;
+    customBox.price = price;
+    
+    // Toggle active classes on buttons
+    document.getElementById('size-6').classList.toggle('active', size === 6);
+    document.getElementById('size-12').classList.toggle('active', size === 12);
+    
+    // Styles
+    document.getElementById('size-6').style.borderColor = size === 6 ? 'var(--caramel)' : 'var(--glass-border)';
+    document.getElementById('size-6').style.color = size === 6 ? 'var(--caramel)' : 'var(--cream-dim)';
+    document.getElementById('size-12').style.borderColor = size === 12 ? 'var(--caramel)' : 'var(--glass-border)';
+    document.getElementById('size-12').style.color = size === 12 ? 'var(--caramel)' : 'var(--cream-dim)';
+    
+    // Adjust grid classes
+    const slotsEl = document.getElementById('box-slots-grid');
+    slotsEl.className = `slots-overlay slots-grid-${size}`;
+    slotsEl.style.gridTemplateColumns = size === 6 ? 'repeat(3, 1fr)' : 'repeat(4, 1fr)';
+    slotsEl.style.gridTemplateRows = size === 6 ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)';
+    
+    resetCustomBox();
+  }
+
+  function addFlavorToBox(name, icon) {
+    if (customBox.items.length >= customBox.size) {
+      showToast("Box is full");
+      return;
+    }
+    customBox.items.push({ name, icon });
+    renderBoxSlots();
+    updateBoxStatusUI();
+    showToast(`Added ${name.split(' ')[0]} to box`);
+  }
+
+  function removeFlavorFromBox(idx) {
+    customBox.items.splice(idx, 1);
+    renderBoxSlots();
+    updateBoxStatusUI();
+  }
+
+  function resetCustomBox() {
+    customBox.items = [];
+    renderBoxSlots();
+    updateBoxStatusUI();
+  }
+
+  function updateBoxStatusUI() {
+    const count = customBox.items.length;
+    const max = customBox.size;
+    document.getElementById('box-fill-count').textContent = count;
+    document.getElementById('box-max-count').textContent = max;
+    
+    const pct = (count / max) * 100;
+    document.getElementById('box-progress').style.width = `${pct}%`;
+    
+    const addBtn = document.getElementById('add-box-to-cart');
+    if (count === max) {
+      addBtn.removeAttribute('disabled');
+      addBtn.style.opacity = '1';
+      addBtn.textContent = `Add Custom Box — $${customBox.price.toFixed(2)}`;
+    } else {
+      addBtn.setAttribute('disabled', 'true');
+      addBtn.style.opacity = '0.5';
+      addBtn.textContent = `Add Custom Box — $${customBox.price.toFixed(2)}`;
+    }
+  }
+
+  function renderBoxSlots() {
+    const slotsEl = document.getElementById('box-slots-grid');
+    slotsEl.innerHTML = '';
+    
+    for (let i = 0; i < customBox.size; i++) {
+      const slot = document.createElement('div');
+      slot.className = 'box-slot';
+      
+      slot.style.background = 'rgba(14,8,4,0.72)';
+      slot.style.border = '1px dashed rgba(180,130,50,0.3)';
+      slot.style.borderRadius = '50%';
+      slot.style.display = 'flex';
+      slot.style.alignItems = 'center';
+      slot.style.justifyContent = 'center';
+      slot.style.position = 'relative';
+      slot.style.aspectRatio = '1';
+      
+      if (i < customBox.items.length) {
+        const item = customBox.items[i];
+        slot.style.borderStyle = 'solid';
+        slot.style.borderColor = 'var(--caramel)';
+        
+        slot.innerHTML = `
+          <div style="font-size: clamp(16px, 2.5vw, 24px);">${item.icon}</div>
+          <button onclick="removeFlavorFromBox(${i})" style="position:absolute; top:-4px; right:-4px; width:16px; height:16px; border-radius:50%; border:none; background:var(--error); color:white; font-size:8px; cursor:pointer; display:flex; align-items:center; justify-content:center;">✕</button>
+        `;
+      } else {
+        slot.innerHTML = `<span style="font-size:10px; color:var(--cream-dim); opacity:0.4;">${i + 1}</span>`;
+      }
+      
+      slotsEl.appendChild(slot);
+    }
+  }
+
+  function addCustomBoxToCart() {
+    if (customBox.items.length !== customBox.size) return;
+    
+    const name = `Custom ${customBox.size}-Pack Box`;
+    const price = customBox.price;
+    const icon = '🎁';
+    
+    const existing = cart.find(i => i.name === name && i.size === customBox.size && JSON.stringify(i.flavors) === JSON.stringify(customBox.items));
+    if (existing) {
+      existing.qty++;
+    } else {
+      cart.push({
+        name,
+        price,
+        icon,
+        qty: 1,
+        isCustomBox: true,
+        size: customBox.size,
+        flavors: [...customBox.items]
+      });
+    }
+    
+    saveCart();
+    renderCart();
+    resetCustomBox();
+    showToast("Custom box added to cart");
+    setTimeout(openCart, 500);
+  }
+
+  // ── CUSTOM CURSOR ──
+  const cursor = document.getElementById('custom-cursor');
+  const cursorDot = document.getElementById('custom-cursor-dot');
+  let mouseX = 0, mouseY = 0;
+  let cursorX = 0, cursorY = 0;
+
+  if (window.matchMedia("(pointer: fine)").matches) {
+    document.addEventListener("mousemove", (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      cursorDot.style.left = `${mouseX}px`;
+      cursorDot.style.top = `${mouseY}px`;
+      if (window.getComputedStyle(cursor).opacity === "0") {
+        cursor.style.opacity = "1";
+        cursorDot.style.opacity = "1";
+      }
+    });
+
+    function animateCursor() {
+      const dx = mouseX - cursorX;
+      const dy = mouseY - cursorY;
+      cursorX += dx * 0.15;
+      cursorY += dy * 0.15;
+      cursor.style.left = `${cursorX}px`;
+      cursor.style.top = `${cursorY}px`;
+      requestAnimationFrame(animateCursor);
+    }
+    requestAnimationFrame(animateCursor);
+
+    document.addEventListener("mouseover", (e) => {
+      const target = e.target;
+      const isInteractive = target.closest("a, button, select, input, .qty-btn, .cart-close");
+      if (isInteractive) {
+        cursor.classList.add("hover");
+      } else {
+        cursor.classList.remove("hover");
+      }
+    });
+
+    document.addEventListener("mouseout", (e) => {
+      if (!e.relatedTarget) {
+        cursor.style.opacity = "0";
+        cursorDot.style.opacity = "0";
+      }
+    });
+
+    document.addEventListener("mousedown", () => cursor.classList.add("active"));
+    document.addEventListener("mouseup", () => cursor.classList.remove("active"));
+  }
+
+  // ── 3D CARD TILT ──
+  if (window.matchMedia("(pointer: fine)").matches) {
+    document.querySelectorAll('.glass-card').forEach(card => {
+      card.addEventListener("mousemove", (e) => {
+        if (!card.classList.contains('visible')) return;
+        
+        const rect = card.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left - rect.width / 2;
+        const mouseY = e.clientY - rect.top - rect.height / 2;
+        
+        const rotateY = (mouseX / (rect.width / 2)) * 8;
+        const rotateX = -(mouseY / (rect.height / 2)) * 8;
+        
+        card.style.transform = `translateY(-50%) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        card.style.borderColor = "rgba(197, 168, 128, 0.4)";
+        card.style.boxShadow = "0 30px 60px rgba(0, 0, 0, 0.8), 0 0 20px rgba(197, 168, 128, 0.15)";
+      });
+      
+      card.addEventListener("mouseleave", () => {
+        card.style.transform = `translateY(-50%) rotateX(0deg) rotateY(0deg)`;
+        card.style.borderColor = "var(--glass-border)";
+        card.style.boxShadow = "";
+      });
+    });
+  }
+
   // ── INIT ────────────────────────────────────────────────────
   renderCart();
+  setBoxSize(6, 24.99); // Initial customizer slot sizes setup
 
   // Close modal on outside click
   document.getElementById('modalOverlay').addEventListener('click', function(e) {
