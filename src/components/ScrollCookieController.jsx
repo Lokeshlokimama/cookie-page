@@ -127,7 +127,7 @@ export default function ScrollCookieController({ triggerRef }) {
         >
           {/* Framer Motion Float Layer */}
           <motion.img
-            src="/hero_cookie.png"
+            src="hero_cookie.png"
             alt="Artisanal Chocolate Chip Cookie"
             className="w-[200px] h-[200px] md:w-[300px] md:h-[300px] object-contain cursor-grab active:cursor-grabbing pointer-events-auto select-none"
             style={{

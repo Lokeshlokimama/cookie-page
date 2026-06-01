@@ -52,7 +52,7 @@ export default function Navbar() {
           aria-label="Little Bakes Home"
         >
           <img 
-            src="/logo.png" 
+            src="logo.png" 
             alt="Little Bakes Logo" 
             className="h-8 md:h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105" 
           />
@@ -136,7 +136,7 @@ export default function Navbar() {
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-2">
                   <img 
-                    src="/logo.png" 
+                    src="logo.png" 
                     alt="Little Bakes Logo" 
                     className="h-8 w-auto object-contain" 
                   />

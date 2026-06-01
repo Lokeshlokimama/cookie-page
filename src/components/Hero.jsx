@@ -65,7 +65,7 @@ export default function Hero() {
       <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none select-none z-0" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'hidden' }}>
         <video
           ref={videoRef}
-          src="/Water_drop_falls_on_powder_202605251914.mp4"
+          src="Water_drop_falls_on_powder_202605251914.mp4"
           style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
           className="opacity-[0.75]"
           loop

@@ -76,7 +76,7 @@ export default function Ingredients() {
       <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none select-none z-0" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'hidden' }}>
         <video
           ref={videoRef}
-          src="/Baker_dusting_flour_croissants_202606011418.mp4"
+          src="Baker_dusting_flour_croissants_202606011418.mp4"
           style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
           className="opacity-[0.70]"
           loop

@@ -22,7 +22,7 @@ export default function Footer() {
           <div className="space-y-6">
             <div className="flex items-center gap-3">
               <img 
-                src="/logo.png" 
+                src="logo.png" 
                 alt="Little Bakes Logo" 
                 className="h-12 md:h-14 w-auto object-contain" 
               />

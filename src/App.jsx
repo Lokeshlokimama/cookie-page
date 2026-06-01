@@ -74,7 +74,7 @@ function FlyingCookies() {
               }}
               className="absolute w-[30px] h-[30px] bg-no-repeat bg-contain"
               style={{
-                backgroundImage: 'url("/hero_cookie.png")',
+                backgroundImage: 'url("hero_cookie.png")',
                 filter: 'drop-shadow(0px 4px 8px rgba(44, 26, 17, 0.25))',
               }}
             />

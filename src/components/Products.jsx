@@ -25,7 +25,7 @@ export default function Products() {
       name: 'Choco Chip Cookie',
       price: 250,
       description: 'The gold standard. Crafted with 70% single-origin dark chocolate chunks, pure French butter, and premium Madagascar vanilla bean.',
-      image: '/hero_cookie.png',
+      image: 'hero_cookie.png',
       badge: 'Bestseller',
     },
     {
@@ -34,7 +34,7 @@ export default function Products() {
       name: 'White Choco Chip Cookie',
       price: 270,
       description: 'Tender brown-butter cookie dough studded with sweet Belgian white chocolate chips and Madagascar vanilla.',
-      image: '/caramel_cookie.png',
+      image: 'caramel_cookie.png',
       badge: 'Delicate',
     },
     {
@@ -43,7 +43,7 @@ export default function Products() {
       name: 'Peanut Butter Cookie',
       price: 270,
       description: 'Rich, creamy organic peanut butter folded into our signature dough, finished with a roasted peanut crunch.',
-      image: '/caramel_cookie.png',
+      image: 'caramel_cookie.png',
       badge: 'Creamy',
     },
     {
@@ -52,7 +52,7 @@ export default function Products() {
       name: 'Oatmeal Raisin Cookie',
       price: 250,
       description: 'Old-fashioned rolled oats, sweet plump organic raisins, and a warm hint of Ceylon cinnamon.',
-      image: '/caramel_cookie.png',
+      image: 'caramel_cookie.png',
       badge: 'Classic',
     },
     {
@@ -61,7 +61,7 @@ export default function Products() {
       name: 'Caramel Cookie',
       price: 270,
       description: 'Rich artisanal cookie loaded with caramel pockets, dark chocolate, and crowned with hand-harvested flaky French sea salt.',
-      image: '/caramel_cookie.png',
+      image: 'caramel_cookie.png',
       badge: 'Award Winner',
     },
     {
@@ -70,7 +70,7 @@ export default function Products() {
       name: 'Pistachio Cookie',
       price: 290,
       description: 'Ceremonial Uji matcha infused cookie dough loaded with roasted green pistachios and white chocolate chunks.',
-      image: '/pistachio_bake.png',
+      image: 'pistachio_bake.png',
       badge: 'Artisanal',
     },
     {
@@ -79,7 +79,7 @@ export default function Products() {
       name: 'Red Velvet Cookies',
       price: 290,
       description: 'Vibrant cocoa red velvet dough with a molten cream cheese core and sweet white chocolate chips.',
-      image: '/red_velvet.png',
+      image: 'red_velvet.png',
       badge: 'Decadent',
     },
     {
@@ -88,7 +88,7 @@ export default function Products() {
       name: 'Dry Fruit Cookie',
       price: 270,
       description: 'Crisp buttery biscuit filled with toasted almonds, walnuts, dates, and candied orange peel.',
-      image: '/caramel_cookie.png',
+      image: 'caramel_cookie.png',
       badge: 'Traditional',
     },
     {
@@ -97,7 +97,7 @@ export default function Products() {
       name: 'Rich Chocolate and Nuts',
       price: 290,
       description: 'A decadent dark cocoa dough baked with white chocolate chunks, molten fudge pieces, and a touch of espresso.',
-      image: '/double_chocolate_cookie.png',
+      image: 'double_chocolate_cookie.png',
       badge: 'Luxurious',
     },
     {
@@ -106,7 +106,7 @@ export default function Products() {
       name: 'Choco Walnut Cookies',
       price: 270,
       description: 'Fudgy dark cocoa cookie dough loaded with crunchy toasted English walnuts and milk chocolate.',
-      image: '/double_chocolate_cookie.png',
+      image: 'double_chocolate_cookie.png',
       badge: 'Crunchy',
     },
 
@@ -117,7 +117,7 @@ export default function Products() {
       name: 'Chocolate Brownie Classic Plain',
       price: 290,
       description: 'Dense, fudgy brownie crafted with 70% dark Belgian cocoa and a signature glossy crinkle crust.',
-      image: '/classic_brownie.png',
+      image: 'classic_brownie.png',
       badge: 'Bestseller',
     },
     {
@@ -126,7 +126,7 @@ export default function Products() {
       name: 'Choco Chip Brownie',
       price: 300,
       description: 'Double the chocolate. Our classic brownie loaded with dark and semi-sweet chocolate chunks.',
-      image: '/classic_brownie.png',
+      image: 'classic_brownie.png',
       badge: 'Fudgy',
     },
     {
@@ -135,7 +135,7 @@ export default function Products() {
       name: 'Peanut Brownie',
       price: 320,
       description: 'Rich chocolate fudge brownie swirled with smooth, salty organic peanut butter fudge.',
-      image: '/classic_brownie.png',
+      image: 'classic_brownie.png',
       badge: 'Rich',
     },
     {
@@ -144,7 +144,7 @@ export default function Products() {
       name: 'Walnut Brownie',
       price: 300,
       description: 'Decadent fudge brownie baked with a generous helping of toasted, chopped English walnuts.',
-      image: '/classic_brownie.png',
+      image: 'classic_brownie.png',
       badge: 'Crunchy',
     },
     {
@@ -153,7 +153,7 @@ export default function Products() {
       name: 'Dry Fruits Brownie',
       price: 320,
       description: 'Rich chocolate brownie packed with toasted almonds, raisins, dried cherries, and chopped walnuts.',
-      image: '/classic_brownie.png',
+      image: 'classic_brownie.png',
       badge: 'Gourmet',
     },
     {
@@ -162,7 +162,7 @@ export default function Products() {
       name: 'Red Gel Brownie',
       price: 300,
       description: 'Decadent dark fudge brownie layered with a vibrant, tart raspberry red gel swirl.',
-      image: '/red_velvet.png',
+      image: 'red_velvet.png',
       badge: 'Specialty',
     },
     {
@@ -171,7 +171,7 @@ export default function Products() {
       name: 'Pistachio Brownie',
       price: 350,
       description: 'Dense chocolate brownie topped and swirled with creamy green pistachio butter and toasted nuts.',
-      image: '/pistachio_bake.png',
+      image: 'pistachio_bake.png',
       badge: 'Chef\'s Choice',
     },
   ];
@@ -190,7 +190,7 @@ export default function Products() {
         <div className="w-full h-full overflow-hidden rounded-[2rem]">
           <video
             ref={videoRef}
-            src="/Chocolate_chip_cookie_being_made_202606011942.mp4"
+            src="Chocolate_chip_cookie_being_made_202606011942.mp4"
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             className="opacity-[0.70]"
             loop
