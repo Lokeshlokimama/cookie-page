@@ -103,7 +103,7 @@ export default function CartDrawer() {
                       <h4 className="font-serif text-sm font-semibold truncate text-[#FAF6F0]">
                         {item.name}
                       </h4>
-                      <p className="text-xs text-[#C5A880] mt-0.5">${item.price.toFixed(2)} each</p>
+                      <p className="text-xs text-[#C5A880] mt-0.5">₹{item.price.toFixed(2)} each</p>
 
                       <div className="flex items-center justify-between mt-3">
                         <div className="flex items-center gap-2 bg-white/5 rounded-full px-2.5 py-1 border border-white/5">
@@ -141,7 +141,7 @@ export default function CartDrawer() {
                 <div className="flex justify-between items-center mb-4">
                   <span className="text-sm text-white/60">Subtotal</span>
                   <span className="font-serif text-lg font-bold text-[#FAF6F0]">
-                    ${cartTotal.toFixed(2)}
+                    ₹{cartTotal.toFixed(2)}
                   </span>
                 </div>
                 <p className="text-[10px] text-white/40 mb-4">

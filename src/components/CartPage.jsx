@@ -19,12 +19,12 @@ export default function CartPage() {
   const [promoError, setPromoError] = useState('');
 
   // Shipping & Billing Calculations
-  const FREE_SHIPPING_THRESHOLD = 50;
+  const FREE_SHIPPING_THRESHOLD = 1500;
   const subtotal = cartTotal;
   const discount = subtotal * promoDiscount;
   const discountedSubtotal = subtotal - discount;
-  const shipping = discountedSubtotal >= FREE_SHIPPING_THRESHOLD || subtotal === 0 ? 0 : 5.00;
-  const tax = discountedSubtotal * 0.08; // 8% tax
+  const shipping = discountedSubtotal >= FREE_SHIPPING_THRESHOLD || subtotal === 0 ? 0 : 150.00;
+  const tax = discountedSubtotal * 0.05; // 5% GST
   const total = discountedSubtotal + shipping + tax;
 
   // Checkout Form States
@@ -161,7 +161,7 @@ export default function CartPage() {
                           {shipping === 0 ? 'Free Shipping Earned' : 'Premium Express Shipping'}
                         </span>
                         <span>
-                          {shipping === 0 ? 'Qualified' : `$${remainingForFreeShipping.toFixed(2)} left`}
+                          {shipping === 0 ? 'Qualified' : `₹${remainingForFreeShipping.toFixed(2)} left`}
                         </span>
                       </div>
                       <div className="h-2 w-full bg-[#EADEC9]/40 rounded-full overflow-hidden">
@@ -174,7 +174,7 @@ export default function CartPage() {
                       </div>
                       {shipping > 0 && (
                         <p className="text-[10px] text-[#4A2E1B]/60 mt-2">
-                          Add just ${remainingForFreeShipping.toFixed(2)} more of delicious bakes to earn free express shipping!
+                          Add just ₹{remainingForFreeShipping.toFixed(2)} more of delicious bakes to earn free express shipping!
                         </p>
                       )}
                     </div>
@@ -201,7 +201,7 @@ export default function CartPage() {
                               <h3 className="font-serif text-base font-bold text-[#2C1A11] mt-0.5">
                                 {item.name}
                               </h3>
-                              <p className="text-xs text-[#4A2E1B]/60 mt-0.5">${item.price.toFixed(2)} each</p>
+                              <p className="text-xs text-[#4A2E1B]/60 mt-0.5">₹{item.price.toFixed(2)} each</p>
                             </div>
                           </div>
 
@@ -225,7 +225,7 @@ export default function CartPage() {
                             </div>
 
                             <span className="font-serif text-base font-black text-[#2C1A11] min-w-[70px] text-right">
-                              ${(item.price * item.quantity).toFixed(2)}
+                              ₹{(item.price * item.quantity).toFixed(2)}
                             </span>
 
                             <button
@@ -289,21 +289,21 @@ export default function CartPage() {
                   <div className="mt-5 space-y-3.5 text-xs border-b border-white/10 pb-5">
                     <div className="flex justify-between text-white/70">
                       <span>Order Subtotal</span>
-                      <span>${subtotal.toFixed(2)}</span>
+                      <span>₹{subtotal.toFixed(2)}</span>
                     </div>
                     {promoApplied && (
                       <div className="flex justify-between text-green-400">
                         <span>SWEET10 (10% Off)</span>
-                        <span>-${discount.toFixed(2)}</span>
+                        <span>-₹{discount.toFixed(2)}</span>
                       </div>
                     )}
                     <div className="flex justify-between text-white/70">
                       <span>Premium Shipping</span>
-                      <span>{shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`}</span>
+                      <span>{shipping === 0 ? 'FREE' : `₹${shipping.toFixed(2)}`}</span>
                     </div>
                     <div className="flex justify-between text-white/70">
-                      <span>VAT / Estimated Tax (8%)</span>
-                      <span>${tax.toFixed(2)}</span>
+                      <span>Estimated GST (5%)</span>
+                      <span>₹{tax.toFixed(2)}</span>
                     </div>
                   </div>
 
@@ -311,7 +311,7 @@ export default function CartPage() {
                   <div className="flex justify-between items-center mt-5 text-[#FAF6F0]">
                     <span className="font-serif text-sm font-semibold uppercase tracking-wider">Total</span>
                     <span className="font-serif text-2xl font-black text-[#C5A880]">
-                      ${total.toFixed(2)}
+                      ₹{total.toFixed(2)}
                     </span>
                   </div>
                 </div>
@@ -478,12 +478,12 @@ export default function CartPage() {
                     {cartItems.map((item) => (
                       <div key={item.id} className="flex justify-between text-xs text-[#2C1A11]">
                         <span>{item.name} (x{item.quantity})</span>
-                        <span className="font-medium">${(item.price * item.quantity).toFixed(2)}</span>
+                        <span className="font-medium">₹{(item.price * item.quantity).toFixed(2)}</span>
                       </div>
                     ))}
                     <div className="border-t border-[#EADEC9]/30 mt-2 pt-2 flex justify-between text-xs font-bold text-[#2C1A11]">
                       <span>Charged Amount</span>
-                      <span>${total.toFixed(2)}</span>
+                      <span>₹{total.toFixed(2)}</span>
                     </div>
                   </div>
                 </div>
