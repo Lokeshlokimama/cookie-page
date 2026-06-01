@@ -1,5 +1,5 @@
 {
-  "name": "sai-insulations",
+  "name": "little-bakes-cookies",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "framer-motion": "^12.40.0",
+    "gsap": "^3.15.0",
     "lucide-react": "^1.16.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"

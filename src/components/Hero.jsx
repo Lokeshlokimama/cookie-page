@@ -1,306 +1,182 @@
-import { useEffect, useMemo, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ShieldCheck, Flame, Snowflake, Award, PhoneCall, MessageCircle, FileSpreadsheet } from 'lucide-react';
-import { siteMetadata } from '../data/siteContent';
+import { useRef, useState, useEffect } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
-// Import downloaded images for slideshow and marquees
-import slider1 from '../assets/images/slider1.jpg';
-import slider2 from '../assets/images/slider2.jpg';
-import slider3 from '../assets/images/slider3.jpg';
-import img1 from '../assets/images/image1.jpg';
-import img2 from '../assets/images/image2.jpg';
-import img3 from '../assets/images/image3.jpg';
+// Magnetic Button component for high-end micro-interaction
+function MagneticButton({ children, href, onClick, className }) {
+  const buttonRef = useRef(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
 
-const SLIDES = [slider1, slider2, slider3];
+  const handleMouseMove = (e) => {
+    const card = buttonRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - (rect.left + rect.width / 2);
+    const y = e.clientY - (rect.top + rect.height / 2);
+    // Draw button 35% towards the cursor coordinate offset
+    setPosition({ x: x * 0.35, y: y * 0.35 });
+  };
 
-const BADGES = [
-  { text: "Hot & Cold Insulation", icon: Flame },
-  { text: "Acoustic Insulation", icon: ShieldCheck },
-  { text: "Industrial Contractors", icon: Award },
-  { text: "Turnkey Project Support", icon: Snowflake }
-];
+  const handleMouseLeave = () => {
+    setPosition({ x: 0, y: 0 });
+  };
 
-// Left vertical marquee images (UP scrolling)
-const SCROLL_IMAGES_LEFT = [slider1, img1, img2, slider1, img1, img2];
-// Right vertical marquee images (DOWN scrolling)
-const SCROLL_IMAGES_RIGHT = [img3, slider2, slider3, img3, slider2, slider3];
-// Mobile horizontal scrolling images
-const SCROLL_IMAGES_HORIZONTAL = [slider1, img1, img2, img3, slider2, slider3, slider1, img1, img2, img3, slider2, slider3];
+  return (
+    <motion.a
+      ref={buttonRef}
+      href={href}
+      onClick={onClick}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      animate={{ x: position.x, y: position.y }}
+      transition={{ type: 'spring', stiffness: 200, damping: 20, mass: 0.8 }}
+      className={className}
+      style={{ display: 'inline-block' }}
+    >
+      {children}
+    </motion.a>
+  );
+}
 
 export default function Hero() {
-  const [activeSlide, setActiveSlide] = useState(0);
-  const { contacts } = siteMetadata;
-  const stats = useMemo(() => siteMetadata.stats || [], []);
-
-  // Auto cycle slides
+  const videoRef = useRef(null);
+  // Force browser autoplay on mount
   useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveSlide(prev => (prev + 1) % SLIDES.length);
-    }, 6000);
-    return () => clearInterval(timer);
+    if (videoRef.current) {
+      videoRef.current.muted = true;
+      videoRef.current.play().catch((err) => console.log('Autoplay blocked:', err));
+    }
   }, []);
 
-  const scrollToSection = (id) => {
-    const target = document.querySelector(id);
-    if (target) {
-      const topBarHeight = 35;
-      const navHeight = 70;
-      const offset = topBarHeight + navHeight;
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = target.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
+  // Parallax Scroll Tracking for background text
+  const { scrollY } = useScroll();
+  const xText = useTransform(scrollY, [0, 1000], [0, -180]);
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
+  const scrollToProducts = (e) => {
+    e.preventDefault();
+    const element = document.getElementById('products');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   return (
-    <section 
-      id="home"
-      className="relative min-h-screen lg:min-h-[92vh] flex items-center justify-center pt-28 pb-28 overflow-hidden bg-ind-navy"
-    >
-      {/* Background Slideshow (Now brighter with higher opacity and CSS filter) */}
-      <div className="absolute inset-0 z-0">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeSlide}
-            initial={{ opacity: 0, scale: 1.06 }}
-            animate={{ opacity: 0.72, scale: 1.02 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.2 }}
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat filter brightness-110 contrast-[1.02]"
-            style={{ backgroundImage: `url(${SLIDES[activeSlide]})` }}
-          />
-        </AnimatePresence>
-        
-        {/* Dark overlay for contrast */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#071827]/92 via-ind-navy/65 to-ind-charcoal/90 z-0" />
-        <div className="absolute inset-0 opacity-[0.10] ind-bg-grid" />
+    <section className="relative min-h-screen flex flex-col justify-between pt-32 pb-12 overflow-hidden premium-gradient-bg">
+      {/* Ambient Background Video */}
+      <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none select-none z-0" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'hidden' }}>
+        <video
+          ref={videoRef}
+          src="/Water_drop_falls_on_powder_202605251914.mp4"
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+          className="opacity-[0.75]"
+          loop
+          playsInline
+          preload="auto"
+        />
       </div>
 
-      <div className="ind-container w-full relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-        
-        {/* Left Side Content */}
-        <div className="lg:col-span-7 space-y-6 text-center lg:text-left bg-white/[0.08] backdrop-blur-md p-6 sm:p-8 md:p-10 rounded-3xl border border-white/10 shadow-2xl shadow-black/25">
-          
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 border border-ind-orange/35 bg-ind-orange/10 px-3 py-1.5 rounded-full text-ind-orange font-mono text-[10px] tracking-widest uppercase"
-          >
-            <Award size={12} />
-            ESTABLISHED IN 2009 • INDUSTRIAL INSULATION CONTRACTOR
-          </motion.div>
+      {/* Huge horizontal parallax background text banner */}
+      <div className="absolute top-[28%] left-0 w-full overflow-hidden whitespace-nowrap pointer-events-none select-none z-0">
+        <motion.h2
+          style={{ x: xText }}
+          className="font-serif text-[12vw] font-black text-[#2C1A11]/[0.025] uppercase tracking-[0.2em] leading-none"
+        >
+          LITTLE BAKES
+        </motion.h2>
+      </div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-3xl sm:text-5xl lg:text-6xl font-display font-black leading-tight tracking-tight text-white uppercase drop-shadow-[0_10px_30px_rgba(0,0,0,0.35)]"
-          >
-            Reliable Industrial <br />
-            <span className="text-ind-orange drop-shadow-[0_2px_15px_rgba(249,115,22,0.2)]">Insulation Solutions</span>
-          </motion.h1>
+      {/* Subtle glowing halo behind where the cookie will sit */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] md:w-[500px] md:h-[500px] rounded-full bg-gold-glow/30 blur-3xl -z-10 pointer-events-none" />
 
+      {/* Side Decorative Text (Luxury Editorial Feel) */}
+      <div className="hidden lg:block absolute left-12 top-1/2 -translate-y-1/2 text-[10px] font-bold tracking-[0.3em] uppercase text-[#2C1A11]/45 origin-left -rotate-90 pointer-events-none select-none">
+        Est. 2026 &mdash; Artisanal Baking Method
+      </div>
+      <div className="hidden lg:block absolute right-12 top-1/2 -translate-y-1/2 text-[10px] font-bold tracking-[0.3em] uppercase text-[#2C1A11]/45 origin-right rotate-90 pointer-events-none select-none">
+        100% Organic &amp; Sustainably Sourced
+      </div>
+
+      <div className="mx-auto max-w-7xl px-6 md:px-12 w-full flex-1 flex flex-col justify-center items-center text-center relative z-10">
+        {/* Eyebrow kicker */}
+        <motion.span
+          initial={{ opacity: 0, y: -15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+          className="text-xs font-bold tracking-[0.25em] text-[#C5A880] uppercase mb-6"
+        >
+          Artisanal Bakery &bull; Freshly Baked
+        </motion.span>
+
+        {/* Heading Split to wrap around the central cookie */}
+        <div className="relative w-full max-w-4xl flex flex-col items-center select-none">
+          {/* Visually Hidden single semantic H1 for clean SEO indexing */}
+          <h1 className="sr-only">Little Bakes - The Gourmet Cookie Revolution</h1>
+
+          <motion.span
+            aria-hidden="true"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: 'easeOut', delay: 0.1 }}
+            className="font-serif text-5xl md:text-8xl font-black text-[#2C1A11] tracking-wide uppercase leading-tight"
+          >
+            THE GOURMET
+          </motion.span>
+
+          {/* Reserved space for the floating cookie to sit in the center */}
+          <div className="h-[200px] md:h-[280px] w-full pointer-events-none" />
+
+          <motion.span
+            aria-hidden="true"
+            initial={{ opacity: 0, y: -30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: 'easeOut', delay: 0.1 }}
+            className="font-serif text-5xl md:text-8xl font-black text-[#2C1A11] tracking-wide uppercase leading-tight -mt-4 md:-mt-8"
+          >
+            REVOLUTION
+          </motion.span>
+        </div>
+
+        {/* Subtitle and Call to action below the cookie space */}
+        <div className="max-w-xl mt-8 flex flex-col items-center">
           <motion.p
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-slate-200 text-sm sm:text-base font-normal leading-relaxed font-sans"
-          >
-            {siteMetadata.subheadline}
-          </motion.p>
-
-          {/* Action CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-2"
-          >
-            <a
-              href="#contact"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection('#contact');
-              }}
-              className="ind-btn-primary rounded-lg"
-            >
-              <FileSpreadsheet size={14} />
-              Get Quote
-            </a>
-
-            <a
-              href={`tel:${contacts.phoneClean1}`}
-              className="ind-btn-outline rounded-lg bg-white/0 border-white/25 text-white hover:bg-white/5 hover:border-white/40"
-              aria-label={`Call now ${contacts.phone1}`}
-            >
-              <PhoneCall size={14} className="text-ind-orange" />
-              Call Now
-            </a>
-
-            <a
-              href={contacts.whatsappLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="ind-btn-base rounded-lg bg-emerald-600 text-white hover:bg-emerald-700"
-            >
-              <MessageCircle size={14} />
-              WhatsApp Enquiry
-            </a>
-
-            <button
-              type="button"
-              onClick={() => scrollToSection('#services')}
-              className="ind-btn-base rounded-lg bg-white/0 border border-white/20 text-white hover:bg-white/5 hover:border-white/35"
-            >
-              View Services
-            </button>
-          </motion.div>
-
-          {/* Trust badges */}
-          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-8 border-t border-white/10 max-w-3xl mx-auto lg:mx-0"
+            transition={{ duration: 1, ease: 'easeOut', delay: 0.4 }}
+            className="text-sm md:text-base text-[#4A2E1B]/80 leading-relaxed font-medium"
           >
-            {BADGES.map((badge, idx) => {
-              const Icon = badge.icon;
-              return (
-                <div key={idx} className="flex items-center gap-2 text-left justify-center lg:justify-start">
-                  <div className="p-1.5 rounded-lg bg-ind-orange/15 text-ind-orange ring-1 ring-ind-orange/15">
-                    <Icon size={14} />
-                  </div>
-                  <span className="text-[11px] font-mono font-medium text-slate-200 leading-tight">
-                    {badge.text.toUpperCase()}
-                  </span>
-                </div>
-              );
-            })}
-          </motion.div>
+            Experience the perfect harmony of rich dark chocolate, French churned butter, and flaky sea salt. Freshly baked and shipped in gold-sealed tins.
+          </motion.p>
 
-        </div>
-
-        {/* Right Side - Scrolling Images Showcase (New dual vertical scrolling track) */}
-        <div className="lg:col-span-5 hidden lg:grid grid-cols-2 gap-4 h-[550px] overflow-hidden relative rounded-3xl p-2 border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl shadow-black/20">
-          {/* Vertical fading gradients to smooth out start and end points */}
-          <div className="absolute top-0 inset-x-0 h-16 bg-gradient-to-b from-ind-navy to-transparent z-10 pointer-events-none" />
-          <div className="absolute bottom-0 inset-x-0 h-16 bg-gradient-to-t from-ind-navy to-transparent z-10 pointer-events-none" />
-
-          {/* Column A (Scrolls UP) */}
-          <div className="flex flex-col gap-4 animate-marquee-up py-4">
-            {SCROLL_IMAGES_LEFT.map((src, index) => (
-              <div 
-                key={`left-${index}`} 
-                className="relative rounded-2xl overflow-hidden h-[180px] border border-white/10 group shadow-lg shrink-0 cursor-pointer"
-                onClick={() => scrollToSection('#gallery')}
-              >
-                <img 
-                  src={src} 
-                  alt="Project photo"
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 filter brightness-105" 
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end p-3 text-left">
-                  <span className="text-[9px] font-mono text-ind-orange font-bold uppercase tracking-wider">PROJECT PHOTO</span>
-                  <span className="text-[11px] font-display font-bold text-white uppercase tracking-wide">VIEW PORTFOLIO</span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Column B (Scrolls DOWN) */}
-          <div className="flex flex-col gap-4 animate-marquee-down py-4">
-            {SCROLL_IMAGES_RIGHT.map((src, index) => (
-              <div 
-                key={`right-${index}`} 
-                className="relative rounded-2xl overflow-hidden h-[180px] border border-white/10 group shadow-lg shrink-0 cursor-pointer"
-                onClick={() => scrollToSection('#gallery')}
-              >
-                <img 
-                  src={src} 
-                  alt="Project photo"
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 filter brightness-105" 
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end p-3 text-left">
-                  <span className="text-[9px] font-mono text-ind-orange font-bold uppercase tracking-wider">CONTRACTING WORK</span>
-                  <span className="text-[11px] font-display font-bold text-white uppercase tracking-wide">VIEW DETAILS</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-      </div>
-
-      {/* Stats strip */}
-      {stats.length > 0 && (
-        <div className="absolute inset-x-0 bottom-0 z-20">
-          <div className="ind-container pb-8">
-            <div className="rounded-2xl border border-white/10 bg-black/20 backdrop-blur-md">
-              <div className="grid grid-cols-2 gap-0 sm:grid-cols-4">
-                {stats.slice(0, 4).map((s) => (
-                  <div
-                    key={s.label}
-                    className="px-5 py-4 border-white/10 [&:not(:nth-child(1)):not(:nth-child(2))]:border-t sm:[&:not(:nth-child(1))]:border-l sm:[&:not(:nth-child(1))]:border-t-0"
-                  >
-                    <p className="text-[10px] font-mono tracking-[0.22em] uppercase text-white/65">
-                      {s.label}
-                    </p>
-                    <p className="mt-1 font-display text-xl sm:text-2xl font-black tracking-tight text-white">
-                      {s.value}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Mobile Horizontal Scrolling Images ticker (Only visible on screens < 1024px) */}
-      <div className="absolute bottom-20 inset-x-0 lg:hidden overflow-hidden py-3 bg-black/20 border-y border-white/10 backdrop-blur-sm z-10">
-        <div className="flex gap-4 animate-marquee-horizontal w-max">
-          {SCROLL_IMAGES_HORIZONTAL.map((src, index) => (
-            <div 
-              key={`mob-${index}`} 
-              className="w-[160px] h-[100px] shrink-0 rounded-xl overflow-hidden border border-white/10 shadow-md cursor-pointer"
-              onClick={() => scrollToSection('#gallery')}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: 'easeOut', delay: 0.6 }}
+            className="mt-8 flex flex-col sm:flex-row gap-4 justify-center"
+          >
+            {/* Wrapped in Magnetic buttons for immersive feel */}
+            <MagneticButton
+              href="#products"
+              onClick={scrollToProducts}
+              className="rounded-full bg-[#2C1A11] px-8 py-4 text-xs font-bold uppercase tracking-widest text-[#FAF6F0] hover:bg-[#C5A880] hover:text-[#2C1A11] hover:shadow-xl transition duration-300 active:scale-95"
             >
-              <img 
-                src={src} 
-                alt="Project photo"
-                className="w-full h-full object-cover" 
-              />
-            </div>
-          ))}
+              Order Fresh Now
+            </MagneticButton>
+            <MagneticButton
+              href="#ingredients"
+              className="rounded-full border border-[#2C1A11]/20 px-8 py-4 text-xs font-bold uppercase tracking-widest text-[#2C1A11] hover:border-[#2C1A11] hover:bg-[#2C1A11]/5 transition duration-300 active:scale-95"
+            >
+              See Our Ingredients
+            </MagneticButton>
+          </motion.div>
         </div>
       </div>
 
-      {/* Scroll Down Mouse Indicator */}
-      <button
-        type="button"
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-1.5 cursor-pointer group"
-        onClick={() => scrollToSection('#about')}
-        aria-label="Scroll to about section"
-      >
-        <span className="text-[9px] font-mono tracking-widest text-slate-300 uppercase group-hover:text-ind-orange transition-colors">
-          Scroll Down
+      {/* Scroll Down Indicator */}
+      <div className="flex flex-col items-center justify-center text-center mt-6 z-10 pointer-events-none select-none">
+        <span className="text-[9px] font-bold tracking-[0.3em] uppercase text-[#2C1A11]/40 mb-2">
+          Scroll to explore
         </span>
-        <div className="w-[22px] h-[36px] rounded-full border border-white/25 flex justify-center p-1 group-hover:border-ind-orange transition-colors">
-          <motion.div 
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-            className="w-1.5 h-1.5 rounded-full bg-ind-orange"
-          />
-        </div>
-      </button>
-
+        <div className="w-[1px] h-10 bg-gradient-to-b from-[#2C1A11]/40 to-transparent animate-pulse" />
+      </div>
     </section>
   );
 }

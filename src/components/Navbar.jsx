@@ -1,202 +1,180 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useCart } from './CartContext';
+import { ShoppingBag, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, PhoneCall, MessageCircle, FileSpreadsheet } from 'lucide-react';
-import logoImg from '../assets/images/logo.png';
-import { siteMetadata } from '../data/siteContent';
-
-const NAV_ITEMS = [
-  { label: 'Home', href: '#home' },
-  { label: 'About', href: '#about' },
-  { label: 'Services', href: '#services' },
-  { label: 'Products', href: '#products' },
-  { label: 'Projects', href: '#gallery' },
-  { label: 'Clients', href: '#clients' },
-  { label: 'Contact', href: '#contact' }
-];
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
+  const { cartCount, setIsCartOpen, isCartOpen, setView } = useCart();
+  const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [logoError, setLogoError] = useState(false);
-  const { contacts } = siteMetadata;
+  const [shouldBounce, setShouldBounce] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 40) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToSection = (e, id) => {
-    e.preventDefault();
-    setMobileMenuOpen(false);
-    const target = document.querySelector(id);
-    if (target) {
-      const topBarHeight = 35; // approximate TopBar height
-      const navHeight = scrolled ? 70 : 80;
-      const offset = topBarHeight + navHeight;
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = target.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
+  useEffect(() => {
+    const handleBounce = () => {
+      setShouldBounce(true);
+      setTimeout(() => setShouldBounce(false), 500);
+    };
+    window.addEventListener('cart-bounce', handleBounce);
+    return () => window.removeEventListener('cart-bounce', handleBounce);
+  }, []);
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }
-  };
+  const navLinks = [
+    { name: 'Gourmet Flavors', href: '#products' },
+    { name: 'Our Ingredients', href: '#ingredients' },
+    { name: 'The Craft', href: '#craft' },
+  ];
 
   return (
     <header
-      className={`fixed top-0 sm:top-9 left-0 right-0 z-30 transition-all duration-300 ${
-        scrolled
-          ? 'bg-white/92 backdrop-blur-md shadow-xl shadow-ind-navy/10 border-b border-slate-200 py-3'
-          : 'bg-white/70 backdrop-blur-md border-b border-slate-200/70 py-4'
+      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+        isScrolled
+          ? 'py-4 bg-[#FAF6F0]/80 backdrop-blur-md border-b border-[#EADEC9]/30 shadow-sm'
+          : 'py-6 bg-transparent'
       }`}
     >
-      <div className="ind-container grid grid-cols-12 items-center gap-3">
-        
-        {/* Brand Logo (Original transparent logo styled dynamically in the UI) */}
-        <a 
-          href="#home" 
-          onClick={(e) => scrollToSection(e, '#home')}
-          className="col-span-8 sm:col-span-6 lg:col-span-3 flex min-w-0 items-center gap-3 group"
+      <div className="mx-auto max-w-7xl px-6 md:px-12 flex items-center justify-between">
+        {/* Branding Logo */}
+        <a
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            setView('landing');
+          }}
+          className="flex items-center gap-2 group cursor-pointer"
+          aria-label="Little Bakes Home"
         >
-          {!logoError ? (
-            <img 
-              src={logoImg} 
-              onError={() => setLogoError(true)}
-              className="h-10 md:h-12 w-auto object-contain transition-all duration-300 filter brightness-[0.96] contrast-[1.06] drop-shadow-[0_1px_2px_rgba(0,0,0,0.14)] group-hover:brightness-110 group-hover:drop-shadow-[0_0_14px_rgba(249,115,22,0.28)]"
-              alt={siteMetadata.companyName}
-            />
-          ) : (
-            <div className="flex flex-col">
-              <span className="font-display text-base md:text-lg font-black tracking-wider uppercase leading-none text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-amber-500 to-orange-400">
-                SRI SAI
-              </span>
-              <span className="font-display text-[10px] md:text-xs font-black text-blue-600 tracking-widest uppercase leading-none mt-1">
-                INSULATIONS
-              </span>
-            </div>
-          )}
+          <img 
+            src="/logo.png" 
+            alt="Little Bakes Logo" 
+            className="h-8 md:h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105" 
+          />
+          <span className="font-serif text-lg md:text-xl font-bold tracking-[0.15em] text-[#2C1A11] group-hover:text-[#C5A880] transition duration-300">
+            LITTLE <span className="text-[#C5A880] font-light">BAKES</span>
+          </span>
         </a>
 
-
-
-        {/* Desktop Links */}
-        <nav className="hidden lg:flex col-span-6 items-center justify-center gap-8">
-          {NAV_ITEMS.map((item) => (
+        {/* Desktop Navigation Links */}
+        <nav className="hidden md:flex items-center gap-10" aria-label="Main Navigation">
+          {navLinks.map((link) => (
             <a
-              key={item.label}
-              href={item.href}
-              onClick={(e) => scrollToSection(e, item.href)}
-              className="text-[11px] font-display font-extrabold tracking-[0.16em] text-ind-navy/85 hover:text-ind-orange transition relative py-2 group uppercase"
+              key={link.name}
+              href={link.href}
+              onClick={() => setView('landing')}
+              className="text-xs font-bold tracking-widest text-[#2C1A11]/70 hover:text-[#2C1A11] uppercase transition duration-300 relative py-1 group"
             >
-              {item.label}
-              <span className="absolute bottom-1 left-0 w-0 h-[2px] bg-ind-orange transition-all duration-300 group-hover:w-full" />
+              {link.name}
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#C5A880] transition-all duration-300 group-hover:w-full" />
             </a>
           ))}
         </nav>
 
-        {/* Desktop CTAs */}
-        <div className="hidden lg:flex col-span-3 items-center justify-end gap-2">
-          <a
-            href={`tel:${contacts.phoneClean1}`}
-            className="ind-btn-outline px-4 py-2.5 text-[10px] rounded-lg"
-            aria-label={`Call now ${contacts.phone1}`}
+        {/* Action Controls */}
+        <div className="flex items-center gap-4">
+          <motion.button
+            id="navbar-cart-btn"
+            onClick={() => setIsCartOpen(true)}
+            className="relative flex items-center justify-center p-2.5 rounded-full bg-[#2C1A11] text-[#FAF6F0] hover:bg-[#FAF6F0] hover:text-[#2C1A11] hover:shadow-lg border border-[#2C1A11] transition duration-300 active:scale-95 cursor-pointer"
+            aria-label={`Open shopping box drawer, contains ${cartCount} items`}
+            aria-expanded={isCartOpen}
+            animate={shouldBounce ? { scale: [1, 1.25, 0.92, 1.08, 1] } : {}}
+            transition={{ duration: 0.5, ease: 'easeInOut' }}
           >
-            <PhoneCall size={14} className="text-ind-orange" />
-            Call Now
-          </a>
-          <a
-            href={contacts.whatsappLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ind-btn-base px-4 py-2.5 text-[10px] rounded-lg bg-emerald-600 text-white hover:bg-emerald-700"
-            aria-label="WhatsApp enquiry"
+            <ShoppingBag className="h-4.5 w-4.5" aria-hidden="true" />
+            <AnimatePresence>
+              {cartCount > 0 && (
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#C5A880] text-[9px] font-black text-[#2C1A11] shadow-md border border-[#FAF6F0]"
+                >
+                  {cartCount}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.button>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMobileMenuOpen(true)}
+            className="md:hidden flex items-center justify-center p-2 rounded-full hover:bg-[#EADEC9]/25 text-[#2C1A11] transition cursor-pointer"
+            aria-label="Open mobile navigation menu"
+            aria-haspopup="true"
+            aria-expanded={mobileMenuOpen}
           >
-            <MessageCircle size={14} />
-            WhatsApp
-          </a>
-          <a
-            href="#contact"
-            onClick={(e) => scrollToSection(e, '#contact')}
-            className="ind-btn-primary px-4 py-2.5 text-[10px] rounded-lg"
-          >
-            <FileSpreadsheet size={14} />
-            Get Quote
-          </a>
+            <Menu className="h-6 w-6" aria-hidden="true" />
+          </button>
         </div>
-
-        {/* Mobile menu toggle */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="col-span-4 sm:col-span-6 lg:hidden justify-self-end p-2.5 bg-slate-100 hover:bg-slate-200 rounded-lg text-ind-navy hover:text-ind-orange transition"
-          aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-        >
-          {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
-
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Nav Drawer */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden absolute top-full left-0 right-0 bg-white border-b border-slate-200 overflow-hidden shadow-lg"
-          >
-            <div className="ind-container py-5 flex flex-col gap-4 font-display text-xs font-bold">
-              {NAV_ITEMS.map((item) => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  onClick={(e) => scrollToSection(e, item.href)}
-                  className="text-ind-navy hover:text-ind-orange py-2 border-b border-slate-100 transition-colors uppercase tracking-wider"
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileMenuOpen(false)}
+              className="fixed inset-0 z-40 bg-black/35 backdrop-blur-xs md:hidden"
+            />
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'tween', duration: 0.3 }}
+              className="fixed right-0 top-0 bottom-0 z-50 w-72 bg-[#FAF6F0] px-8 py-6 shadow-2xl flex flex-col md:hidden border-l border-[#EADEC9]"
+            >
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-2">
+                  <img 
+                    src="/logo.png" 
+                    alt="Little Bakes Logo" 
+                    className="h-8 w-auto object-contain" 
+                  />
+                  <span className="font-serif text-base font-bold tracking-wider text-[#2C1A11]">
+                    LITTLE BAKES
+                  </span>
+                </div>
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="rounded-full p-1.5 text-[#2C1A11]/60 hover:bg-[#EADEC9]/25 hover:text-[#2C1A11]"
                 >
-                  {item.label}
-                </a>
-              ))}
-              
-              <div className="mt-1 grid grid-cols-1 gap-2">
-                <a
-                  href={`tel:${contacts.phoneClean1}`}
-                  className="ind-btn-outline py-3 rounded-lg text-center flex items-center justify-center gap-2"
-                >
-                  <PhoneCall size={14} className="text-ind-orange" />
-                  Call Now
-                </a>
-                <a
-                  href={contacts.whatsappLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="ind-btn-base py-3 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 text-center flex items-center justify-center gap-2"
-                >
-                  <MessageCircle size={14} />
-                  WhatsApp Enquiry
-                </a>
-                <a
-                  href="#contact"
-                  onClick={(e) => scrollToSection(e, '#contact')}
-                  className="ind-btn-primary py-3 rounded-lg text-center flex items-center justify-center gap-2"
-                >
-                  <FileSpreadsheet size={14} />
-                  Get Quote
-                </a>
+                  <X className="h-5 w-5" />
+                </button>
               </div>
-            </div>
-          </motion.div>
+
+              <nav className="flex flex-col gap-6">
+                {navLinks.map((link) => (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setView('landing');
+                    }}
+                    className="text-sm font-bold tracking-widest text-[#2C1A11]/80 hover:text-[#2C1A11] uppercase border-b border-[#EADEC9]/40 pb-2 transition"
+                  >
+                    {link.name}
+                  </a>
+                ))}
+              </nav>
+
+              <div className="mt-auto pt-6 text-[10px] text-[#2C1A11]/40 border-t border-[#EADEC9]/40">
+                Freshly baked premium cookies shipped worldwide.
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
-
     </header>
   );
 }
