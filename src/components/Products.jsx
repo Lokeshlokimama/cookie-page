@@ -185,19 +185,17 @@ export default function Products() {
       id="products"
       className="relative py-16 px-6 md:px-12 bg-[#FAF6F0]"
     >
-      {/* Ambient Background Video (Constrained to Page Content Width) */}
-      <div className="absolute inset-y-16 inset-x-6 md:inset-x-12 left-0 right-0 max-w-7xl mx-auto pointer-events-none select-none z-0">
-        <div className="w-full h-full overflow-hidden rounded-[2rem]">
-          <video
-            ref={videoRef}
-            src="Chocolate_chip_cookie_being_made_202606011942.mp4"
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            className="opacity-[0.70]"
-            loop
-            playsInline
-            preload="auto"
-          />
-        </div>
+      {/* Ambient Background Video */}
+      <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none select-none z-0" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'hidden' }}>
+        <video
+          ref={videoRef}
+          src="Chocolate_chip_cookie_being_made_202606011942.mp4"
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+          className="opacity-[0.70]"
+          loop
+          playsInline
+          preload="auto"
+        />
       </div>
 
       {/* Background graphic elements */}
