@@ -118,9 +118,9 @@ export default function ScrollCookieController({ triggerRef }) {
           ease: 'none',
         }, 0);
 
-        // Spin the muffin (looks like natural rolling)
+        // Spin the muffin horizontally around the Y-axis
         tl.to(cookie, {
-          rotation: 720,
+          rotationY: 720,
           ease: 'none',
         }, 0);
       });
