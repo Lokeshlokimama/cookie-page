@@ -121,15 +121,12 @@ export default function Hero() {
             THE GOURMET
           </motion.span>
 
-          {/* Reserved space for the floating cookie to sit in the center */}
-          <div id="hero-muffin-placeholder" className="h-[200px] md:h-[280px] w-full pointer-events-none" />
-
           <motion.span
             aria-hidden="true"
-            initial={{ opacity: 0, y: -30 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: 'easeOut', delay: 0.1 }}
-            className="font-serif text-5xl md:text-8xl font-black text-[#2C1A11] tracking-wide uppercase leading-tight -mt-4 md:-mt-8"
+            transition={{ duration: 1, ease: 'easeOut', delay: 0.25 }}
+            className="font-serif text-5xl md:text-8xl font-black text-[#C5A880] tracking-wide uppercase leading-tight mt-2 md:mt-4"
           >
             REVOLUTION
           </motion.span>

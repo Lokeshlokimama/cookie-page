@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ParticleBackground from './components/ParticleBackground';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import ScrollCookieController from './components/ScrollCookieController';
+
 import Ingredients from './components/Ingredients';
 import Products from './components/Products';
 import CartPage from './components/CartPage';
@@ -86,7 +86,7 @@ function FlyingCookies() {
 }
 
 function MainApp() {
-  const scrollContainerRef = useRef(null);
+
   const { view } = useCart();
 
   return (
@@ -103,15 +103,8 @@ function MainApp() {
       {/* Conditionally render Landing view or Cart page view */}
       {view === 'landing' ? (
         <>
-          {/* Scroll Container for Hero and Ingredients (triggers GSAP ScrollTrigger timeline) */}
-          <div ref={scrollContainerRef} className="relative w-full">
-            {/* Main absolute cookie controlled by GSAP ScrollTrigger path & roll */}
-            <ScrollCookieController triggerRef={scrollContainerRef} />
-            
-            <Hero />
-            
-            <Ingredients />
-          </div>
+          <Hero />
+          <Ingredients />
 
           {/* Products selection section */}
           <Products />
