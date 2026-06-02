@@ -261,16 +261,8 @@ export default function Ingredients() {
             <p className="text-xs text-[#4A2E1B]/80 leading-relaxed">{ingredientDetails[0].description}</p>
           </motion.div>
 
-          {/* Center Brand Badge (slow rotating branding tie-in) */}
-          <div className="col-start-2 row-start-1 row-span-2 flex justify-center items-center hidden md:flex">
-            <motion.img 
-              src="logo.png" 
-              alt="Little Bakes Brand Badge" 
-              className="w-[180px] h-[180px] object-contain drop-shadow-md select-none pointer-events-none"
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 30, ease: "linear" }}
-            />
-          </div>
+          {/* Reserved Space for Cookie in Center */}
+          <div id="ingredients-muffin-placeholder" className="col-start-2 row-start-1 row-span-2 h-[200px] md:h-[320px] hidden md:block pointer-events-none" />
 
           {/* Top Right Ingredient Card */}
           <motion.div
