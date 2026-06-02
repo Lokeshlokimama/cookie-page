@@ -77,7 +77,7 @@ export default function Ingredients() {
           ref={videoRef}
           src="Baker_dusting_flour_croissants_202606011418.mp4"
           style={{ position: 'absolute', top: '-6%', left: 0, width: '100%', height: '112%', objectFit: 'cover' }}
-          className="opacity-[0.46]"
+          className="opacity-[0.62]"
           data-parallax-video="7"
           autoPlay
           muted
@@ -85,7 +85,7 @@ export default function Ingredients() {
           playsInline
           preload="auto"
         />
-        <div className="absolute inset-0 bg-[#FAF6F0]/42" />
+        <div className="absolute inset-0 bg-[#FAF6F0]/26" />
       </div>
 
       {/* Huge horizontal parallax background text banner (Counter-Scroll) */}

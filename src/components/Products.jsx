@@ -191,7 +191,7 @@ export default function Products() {
           ref={videoRef}
           src="Chocolate_chip_cookie_being_made_202606011942.mp4"
           style={{ position: 'absolute', top: '-6%', left: 0, width: '100%', height: '112%', objectFit: 'cover' }}
-          className="opacity-[0.44]"
+          className="opacity-[0.58]"
           data-parallax-video="5"
           autoPlay
           muted
@@ -199,7 +199,7 @@ export default function Products() {
           playsInline
           preload="auto"
         />
-        <div className="absolute inset-0 bg-[#FAF6F0]/50" />
+        <div className="absolute inset-0 bg-[#FAF6F0]/32" />
       </div>
 
       {/* Background graphic elements */}

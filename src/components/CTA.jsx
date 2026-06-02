@@ -29,7 +29,7 @@ export default function CTA() {
           ref={videoRef}
           src="Chef_piping_frosting_on_cupcake_202606011419.mp4"
           style={{ position: 'absolute', top: '-6%', left: 0, width: '100%', height: '112%', objectFit: 'cover' }}
-          className="opacity-[0.34]"
+          className="opacity-[0.5]"
           data-parallax-video="4"
           autoPlay
           muted
@@ -38,7 +38,7 @@ export default function CTA() {
           preload="auto"
         />
         {/* Dark vignette overlay to make text stand out */}
-        <div className="absolute inset-0 bg-[#2C1A11]/60 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-[#2C1A11]/46 mix-blend-multiply" />
       </div>
 
       <div className="relative z-10 max-w-2xl mx-auto space-y-6 text-center select-none" data-reveal="up">
