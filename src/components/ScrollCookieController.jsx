@@ -73,7 +73,7 @@ export default function ScrollCookieController({ triggerRef }) {
       // Apply initial styling offsets
       // Set absolute wrapper size center offsets
       const isMobile = window.innerWidth < 768;
-      const size = isMobile ? 200 : 300;
+      const size = isMobile ? 240 : 350;
       
       gsap.set(wrapper, {
         top: 0,
@@ -211,7 +211,7 @@ export default function ScrollCookieController({ triggerRef }) {
           <motion.img
             src="hero_muffin.png"
             alt="Artisanal Gourmet Chocolate Muffin"
-            className="w-[200px] h-[200px] md:w-[300px] md:h-[300px] object-contain cursor-grab active:cursor-grabbing pointer-events-auto select-none"
+            className="w-[240px] h-[240px] md:w-[350px] md:h-[350px] object-contain cursor-grab active:cursor-grabbing pointer-events-auto select-none"
             style={{
               filter: 'drop-shadow(0px 16px 32px rgba(44, 26, 17, 0.2))',
               transformStyle: 'preserve-3d',

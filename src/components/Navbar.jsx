@@ -54,7 +54,7 @@ export default function Navbar() {
           <img 
             src="logo.png" 
             alt="Little Bakes Logo" 
-            className="h-8 md:h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105" 
+            className="h-[44px] md:h-[60px] w-auto object-contain transition-transform duration-300 group-hover:scale-105" 
           />
           <span className="font-serif text-lg md:text-xl font-bold tracking-[0.15em] text-[#2C1A11] group-hover:text-[#C5A880] transition duration-300">
             LITTLE <span className="text-[#C5A880] font-light">BAKES</span>
@@ -138,7 +138,7 @@ export default function Navbar() {
                   <img 
                     src="logo.png" 
                     alt="Little Bakes Logo" 
-                    className="h-8 w-auto object-contain" 
+                    className="h-[40px] w-auto object-contain" 
                   />
                   <span className="font-serif text-base font-bold tracking-wider text-[#2C1A11]">
                     LITTLE BAKES
