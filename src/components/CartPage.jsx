@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from './CartContext';
 import { ArrowLeft, Trash2, Plus, Minus, ShieldCheck, Truck, Lock, CheckCircle, ShoppingBag } from 'lucide-react';
+import { isSupabaseConfigured, supabase } from '../lib/supabase';
+
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export default function CartPage() {
   const {
@@ -43,6 +46,10 @@ export default function CartPage() {
   const [processingStep, setProcessingStep] = useState(0);
   const [orderConfirmed, setOrderConfirmed] = useState(false);
   const [generatedOrderNumber, setGeneratedOrderNumber] = useState('');
+  const [orderSaveStatus, setOrderSaveStatus] = useState({
+    type: 'idle',
+    message: '',
+  });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -76,7 +83,63 @@ export default function CartPage() {
     return errors;
   };
 
-  const handleSubmitOrder = (e) => {
+  const saveOrderToSupabase = async (orderNumber) => {
+    if (!isSupabaseConfigured) {
+      return {
+        type: 'skipped',
+        message: 'Supabase key is not configured yet, so this demo order was not saved to your account.',
+      };
+    }
+
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError) throw userError;
+
+    if (!user) {
+      return {
+        type: 'skipped',
+        message: 'Sign in before checkout to save this order to your purchase history.',
+      };
+    }
+
+    const orderItems = cartItems.map((item) => ({
+      id: item.id,
+      name: item.name,
+      category: item.category,
+      image: item.image,
+      price: item.price,
+      quantity: item.quantity,
+    }));
+
+    const { error: insertError } = await supabase.from('orders').insert({
+      user_id: user.id,
+      order_number: orderNumber,
+      customer_name: formData.name.trim(),
+      customer_email: formData.email.trim(),
+      shipping_address: formData.address.trim(),
+      city: formData.city.trim(),
+      postal_code: formData.zip.trim(),
+      items: orderItems,
+      subtotal: Number(subtotal.toFixed(2)),
+      discount: Number(discount.toFixed(2)),
+      shipping: Number(shipping.toFixed(2)),
+      tax: Number(tax.toFixed(2)),
+      total_amount: Number(total.toFixed(2)),
+      status: 'Processing',
+    });
+
+    if (insertError) throw insertError;
+
+    return {
+      type: 'saved',
+      message: 'Order saved to Supabase purchase history.',
+    };
+  };
+
+  const handleSubmitOrder = async (e) => {
     e.preventDefault();
     const errors = validateForm();
     if (Object.keys(errors).length > 0) {
@@ -85,15 +148,33 @@ export default function CartPage() {
     }
 
     setIsProcessing(true);
-    // Simulate steps in fresh baking/sealing transaction
-    setTimeout(() => setProcessingStep(1), 800);
-    setTimeout(() => setProcessingStep(2), 1600);
-    setTimeout(() => {
+    setProcessingStep(0);
+    setOrderSaveStatus({ type: 'idle', message: '' });
+
+    try {
+      await wait(800);
+      setProcessingStep(1);
+      await wait(800);
+      setProcessingStep(2);
+      await wait(900);
+
       const orderNum = 'LB-' + Math.floor(100000 + Math.random() * 900000);
+      const saveStatus = await saveOrderToSupabase(orderNum);
+
       setGeneratedOrderNumber(orderNum);
+      setOrderSaveStatus(saveStatus);
       setIsProcessing(false);
       setOrderConfirmed(true);
-    }, 2500);
+    } catch (err) {
+      const orderNum = 'LB-' + Math.floor(100000 + Math.random() * 900000);
+      setGeneratedOrderNumber(orderNum);
+      setOrderSaveStatus({
+        type: 'error',
+        message: err.message || 'Order confirmed locally, but Supabase could not save it.',
+      });
+      setIsProcessing(false);
+      setOrderConfirmed(true);
+    }
   };
 
   const handleReturnHome = () => {
@@ -462,6 +543,20 @@ export default function CartPage() {
               <p className="text-xs text-[#C5A880] uppercase tracking-widest font-black mt-2">
                 Order Reference: {generatedOrderNumber}
               </p>
+
+              {orderSaveStatus.message && (
+                <p
+                  className={`mt-4 rounded-2xl border px-4 py-3 text-xs font-semibold leading-relaxed ${
+                    orderSaveStatus.type === 'saved'
+                      ? 'border-green-200 bg-green-50 text-green-800'
+                      : orderSaveStatus.type === 'error'
+                        ? 'border-red-200 bg-red-50 text-red-800'
+                        : 'border-amber-200 bg-amber-50 text-amber-800'
+                  }`}
+                >
+                  {orderSaveStatus.message}
+                </p>
+              )}
               
               <div className="my-6 border-t border-b border-[#EADEC9]/25 py-6 text-left space-y-4">
                 <div className="text-xs text-[#4A2E1B]/80 leading-relaxed space-y-1">

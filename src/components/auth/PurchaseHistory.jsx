@@ -101,6 +101,10 @@ export default function PurchaseHistory({ user, onShopNow }) {
     );
   };
 
+  const getDisplayOrderId = (order) => {
+    return order.order_number || order.id?.replace?.('ord_demo_', '#') || order.id;
+  };
+
   // Safe items parser
   const renderOrderItems = (items) => {
     let parsedItems = [];
@@ -201,7 +205,7 @@ export default function PurchaseHistory({ user, onShopNow }) {
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 pb-4 border-b border-[#EADEC9]/15">
                 <div className="flex flex-wrap items-center gap-3">
                   <span className="text-xs font-bold text-[#2C1A11] font-mono uppercase">
-                    Order ID: {order.id.replace('ord_demo_', '#')}
+                    Order ID: {getDisplayOrderId(order)}
                   </span>
                   <span className="text-[10px] text-stone-400 font-medium">
                     &bull; {formatDate(order.created_at)}
