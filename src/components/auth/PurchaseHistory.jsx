@@ -5,7 +5,6 @@ import { ShoppingBag, Clock, CheckCircle2, Truck, AlertTriangle } from 'lucide-r
 export default function PurchaseHistory({ user, onShopNow }) {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [isDemoData, setIsDemoData] = useState(false);
 
   useEffect(() => {
@@ -13,7 +12,6 @@ export default function PurchaseHistory({ user, onShopNow }) {
 
     const fetchOrders = async () => {
       setLoading(true);
-      setError(null);
       setIsDemoData(false);
 
       try {

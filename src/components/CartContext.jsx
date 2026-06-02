@@ -1,22 +1,17 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+/* eslint-disable react-refresh/only-export-components */
+import { createContext, useContext, useState } from 'react';
 
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [cartCount, setCartCount] = useState(0);
-  const [cartTotal, setCartTotal] = useState(0);
   const [flyingParticles, setFlyingParticles] = useState([]);
   const [view, setView] = useState('landing');
 
-  // Recalculate totals whenever cart items change
-  useEffect(() => {
-    const count = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-    const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    setCartCount(count);
-    setCartTotal(total);
-  }, [cartItems]);
+  // Recalculate totals on the fly to avoid setState in useEffect warnings
+  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const cartTotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
   const addToCart = (product) => {
     setCartItems((prevItems) => {

@@ -23,7 +23,6 @@ export default function Ingredients() {
   const handleMouseMove = (e) => {
     const section = sectionRef.current;
     if (!section) return;
-    const rect = section.getBoundingClientRect();
     
     // Relative coordinates from screen center
     const x = (e.clientX - window.innerWidth / 2) * 0.08;

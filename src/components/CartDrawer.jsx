@@ -1,7 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from './CartContext';
 import { X, Plus, Minus, Trash2, ShoppingBag } from 'lucide-react';
-import { useState } from 'react';
 
 export default function CartDrawer() {
   const {
@@ -11,20 +10,9 @@ export default function CartDrawer() {
     cartTotal,
     updateQuantity,
     removeFromCart,
-    clearCart,
     setView
   } = useCart();
 
-  const [checkoutSuccess, setCheckoutSuccess] = useState(false);
-
-  const handleCheckout = () => {
-    setCheckoutSuccess(true);
-    setTimeout(() => {
-      setCheckoutSuccess(false);
-      clearCart();
-      setIsCartOpen(false);
-    }, 4000);
-  };
 
   return (
     <AnimatePresence>
@@ -160,35 +148,6 @@ export default function CartDrawer() {
             )}
           </motion.div>
 
-          {/* Checkout Success Modal */}
-          <AnimatePresence>
-            {checkoutSuccess && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md"
-              >
-                <div className="w-full max-w-sm rounded-2xl bg-[#2C1A11] p-6 text-center border border-white/10 shadow-2xl text-[#FAF6F0]">
-                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white/5 text-[#C5A880] mb-4">
-                    <ShoppingBag className="h-8 w-8" />
-                  </div>
-                  <h3 className="font-serif text-xl font-bold mb-2">Order Confirmed!</h3>
-                  <p className="text-xs text-white/70 leading-relaxed mb-4">
-                    Your luxury cookie selection is being prepared by our master bakers. Baked fresh and shipped in gold-sealed tins.
-                  </p>
-                  <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: '100%' }}
-                      transition={{ duration: 3.5, ease: 'linear' }}
-                      className="h-full bg-[#C5A880]"
-                    />
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </>
       )}
     </AnimatePresence>

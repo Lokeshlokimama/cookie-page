@@ -4,7 +4,7 @@ import { ShoppingBag, Menu, X, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navbar() {
-  const { cartCount, setIsCartOpen, isCartOpen, setView } = useCart();
+  const { cartCount, setIsCartOpen, isCartOpen, setView, view } = useCart();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [shouldBounce, setShouldBounce] = useState(false);
