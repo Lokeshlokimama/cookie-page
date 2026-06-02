@@ -1,11 +1,12 @@
 import { useRef, useState, useEffect } from 'react';
 import { CartProvider, useCart } from './components/CartContext';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll } from 'framer-motion';
 import ParticleBackground from './components/ParticleBackground';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 
 import ScrollCookieController from './components/ScrollCookieController';
+import ScrollStory from './components/ScrollStory';
 import Ingredients from './components/Ingredients';
 import Products from './components/Products';
 import CartPage from './components/CartPage';
@@ -91,9 +92,18 @@ function MainApp() {
 
   const scrollContainerRef = useRef(null);
   const { view, setView } = useCart();
+  const { scrollYProgress } = useScroll();
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-[#FAF6F0] selection:bg-[#2C1A11] selection:text-[#FAF6F0]">
+      <motion.div
+        aria-hidden="true"
+        className="fixed left-0 top-0 z-[60] h-[3px] w-full origin-left bg-[#C5A880]"
+        style={{ scaleX: scrollYProgress }}
+      />
+
+      <ScrollStory />
+
       {/* Dynamic flying cookies micro-particles */}
       <FlyingCookies />
 

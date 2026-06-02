@@ -26,6 +26,7 @@
   body {
     overflow-x: clip;
     scroll-behavior: smooth;
+    scroll-padding-top: 96px;
   }
 
   body {
@@ -118,6 +119,11 @@
   .transition-tilt {
     transition: transform 0.15s ease-out;
   }
+
+  [data-reveal],
+  [data-stagger] > * {
+    will-change: transform, opacity;
+  }
 }
 
 /* Custom micro-animations */
@@ -137,4 +143,19 @@
 
 .animate-drift-slow {
   animation: drift-slow 8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html,
+  body {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

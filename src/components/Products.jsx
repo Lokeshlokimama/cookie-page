@@ -183,19 +183,23 @@ export default function Products() {
   return (
     <section
       id="products"
-      className="relative py-16 px-6 md:px-12 bg-[#FAF6F0]"
+      className="relative scroll-mt-24 py-16 px-6 md:px-12 bg-[#FAF6F0]"
     >
       {/* Ambient Background Video */}
       <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none select-none z-0" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'hidden' }}>
         <video
           ref={videoRef}
           src="Chocolate_chip_cookie_being_made_202606011942.mp4"
-          style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-          className="opacity-[0.70]"
+          style={{ position: 'absolute', top: '-6%', left: 0, width: '100%', height: '112%', objectFit: 'cover' }}
+          className="opacity-[0.44]"
+          data-parallax-video="5"
+          autoPlay
+          muted
           loop
           playsInline
           preload="auto"
         />
+        <div className="absolute inset-0 bg-[#FAF6F0]/50" />
       </div>
 
       {/* Background graphic elements */}
@@ -203,7 +207,7 @@ export default function Products() {
 
       <div className="mx-auto max-w-7xl relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-12 select-none">
+        <div className="text-center max-w-2xl mx-auto mb-12 select-none" data-reveal="up">
           <span className="text-xs font-bold tracking-[0.25em] text-[#C5A880] uppercase mb-4 block">
             The Selection
           </span>
@@ -216,7 +220,7 @@ export default function Products() {
         </div>
 
         {/* Category Filtering Tabs */}
-        <div className="flex justify-center gap-2 md:gap-4 mb-16 relative z-10 flex-wrap">
+        <div className="flex justify-center gap-2 md:gap-4 mb-16 relative z-10 flex-wrap" data-reveal="up">
           {[
             { id: 'all', label: 'All Bakes' },
             { id: 'cookie', label: 'Cookies' },
@@ -245,6 +249,7 @@ export default function Products() {
         <motion.div
           layout
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+          data-stagger
         >
           <AnimatePresence mode="popLayout">
             {filteredProducts.map((product) => (

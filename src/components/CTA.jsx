@@ -22,14 +22,17 @@ export default function CTA() {
   };
 
   return (
-    <section className="relative py-28 px-6 md:px-12 bg-[#2C1A11] overflow-hidden text-center flex flex-col justify-center items-center">
+    <section id="craft" className="relative scroll-mt-24 py-28 px-6 md:px-12 bg-[#2C1A11] overflow-hidden text-center flex flex-col justify-center items-center">
       {/* Ambient Background Video */}
       <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none select-none z-0" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'hidden' }}>
         <video
           ref={videoRef}
           src="Chef_piping_frosting_on_cupcake_202606011419.mp4"
-          style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-          className="opacity-[0.40]"
+          style={{ position: 'absolute', top: '-6%', left: 0, width: '100%', height: '112%', objectFit: 'cover' }}
+          className="opacity-[0.34]"
+          data-parallax-video="4"
+          autoPlay
+          muted
           loop
           playsInline
           preload="auto"
@@ -38,7 +41,7 @@ export default function CTA() {
         <div className="absolute inset-0 bg-[#2C1A11]/60 mix-blend-multiply" />
       </div>
 
-      <div className="relative z-10 max-w-2xl mx-auto space-y-6 text-center select-none">
+      <div className="relative z-10 max-w-2xl mx-auto space-y-6 text-center select-none" data-reveal="up">
         <span className="text-xs font-bold tracking-[0.25em] text-[#C5A880] uppercase mb-2 block">
           Taste the Craft
         </span>

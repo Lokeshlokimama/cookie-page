@@ -66,12 +66,16 @@ export default function Hero() {
         <video
           ref={videoRef}
           src="Water_drop_falls_on_powder_202605251914.mp4"
-          style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-          className="opacity-[0.75]"
+          style={{ position: 'absolute', top: '-6%', left: 0, width: '100%', height: '112%', objectFit: 'cover' }}
+          className="opacity-[0.5]"
+          data-parallax-video="6"
+          autoPlay
+          muted
           loop
           playsInline
           preload="auto"
         />
+        <div className="absolute inset-0 bg-[#FAF6F0]/35" />
       </div>
 
       {/* Huge horizontal parallax background text banner */}

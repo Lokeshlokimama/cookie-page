@@ -69,19 +69,23 @@ export default function Ingredients() {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       id="ingredients"
-      className="relative min-h-screen flex flex-col justify-center items-center py-24 overflow-hidden bg-[#FAF6F0]"
+      className="relative min-h-screen scroll-mt-24 flex flex-col justify-center items-center py-24 overflow-hidden bg-[#FAF6F0]"
     >
       {/* Ambient Background Video */}
       <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none select-none z-0" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'hidden' }}>
         <video
           ref={videoRef}
           src="Baker_dusting_flour_croissants_202606011418.mp4"
-          style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-          className="opacity-[0.70]"
+          style={{ position: 'absolute', top: '-6%', left: 0, width: '100%', height: '112%', objectFit: 'cover' }}
+          className="opacity-[0.46]"
+          data-parallax-video="7"
+          autoPlay
+          muted
           loop
           playsInline
           preload="auto"
         />
+        <div className="absolute inset-0 bg-[#FAF6F0]/42" />
       </div>
 
       {/* Huge horizontal parallax background text banner (Counter-Scroll) */}
@@ -233,7 +237,7 @@ export default function Ingredients() {
 
       <div className="mx-auto max-w-7xl px-6 md:px-12 w-full flex-1 flex flex-col justify-between items-center relative z-10 h-full">
         {/* Eyebrow & Title */}
-        <div className="text-center max-w-2xl mb-12 select-none">
+        <div className="text-center max-w-2xl mb-12 select-none" data-reveal="up">
           <span className="text-xs font-bold tracking-[0.25em] text-[#C5A880] uppercase mb-4 block">
             Pure &amp; Uncompromised
           </span>
@@ -246,7 +250,7 @@ export default function Ingredients() {
         </div>
 
         {/* 4-Quadrant Symmetrical Layout around the central cookie */}
-        <div className="grid grid-cols-1 md:grid-cols-3 grid-rows-auto md:grid-rows-2 gap-8 w-full max-w-5xl items-center">
+        <div className="grid grid-cols-1 md:grid-cols-3 grid-rows-auto md:grid-rows-2 gap-8 w-full max-w-5xl items-center" data-stagger>
           
           {/* Top Left Ingredient Card */}
           <motion.div
