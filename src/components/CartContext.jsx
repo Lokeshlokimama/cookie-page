@@ -34,9 +34,9 @@ export function CartProvider({ children }) {
     setIsCartOpen(true);
   };
 
-  const triggerFlyEffect = (startX, startY) => {
+  const triggerFlyEffect = (startX, startY, image = 'hero_cookie.png') => {
     const id = Date.now() + Math.random();
-    setFlyingParticles((prev) => [...prev, { id, startX, startY }]);
+    setFlyingParticles((prev) => [...prev, { id, startX, startY, image }]);
     // Remove particle after animation completes (950ms)
     setTimeout(() => {
       setFlyingParticles((prev) => prev.filter((p) => p.id !== id));

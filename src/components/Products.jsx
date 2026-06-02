@@ -308,7 +308,7 @@ export default function Products() {
                       
                       <button
                         onClick={(e) => {
-                          triggerFlyEffect(e.clientX, e.clientY);
+                          triggerFlyEffect(e.clientX, e.clientY, product.image);
                           addToCart(product);
                         }}
                         className="inline-flex items-center gap-2 rounded-full bg-[#2C1A11] text-[#FAF6F0] px-5 py-2.5 text-[9px] font-bold uppercase tracking-widest hover:bg-[#C5A880] hover:text-[#2C1A11] transition duration-300 active:scale-95 shadow-sm cursor-pointer"

@@ -122,7 +122,7 @@ export default function Hero() {
           </motion.span>
 
           {/* Reserved space for the floating cookie to sit in the center */}
-          <div className="h-[200px] md:h-[280px] w-full pointer-events-none" />
+          <div id="hero-muffin-placeholder" className="h-[200px] md:h-[280px] w-full pointer-events-none" />
 
           <motion.span
             aria-hidden="true"

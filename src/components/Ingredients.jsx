@@ -262,7 +262,7 @@ export default function Ingredients() {
           </motion.div>
 
           {/* Reserved Space for Cookie in Center */}
-          <div className="col-start-2 row-start-1 row-span-2 h-[200px] md:h-[320px] hidden md:block pointer-events-none" />
+          <div id="ingredients-muffin-placeholder" className="col-start-2 row-start-1 row-span-2 h-[200px] md:h-[320px] hidden md:block pointer-events-none" />
 
           {/* Top Right Ingredient Card */}
           <motion.div
