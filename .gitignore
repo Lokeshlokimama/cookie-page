@@ -25,3 +25,8 @@ dist-ssr
 
 # Agent files
 .agents/
+
+# Env secrets
+.env
+.env.local
+.env.*

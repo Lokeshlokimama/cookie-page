@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useCart } from './CartContext';
-import { ShoppingBag, Menu, X } from 'lucide-react';
+import { ShoppingBag, Menu, X, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navbar() {
@@ -77,7 +77,20 @@ export default function Navbar() {
         </nav>
 
         {/* Action Controls */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
+          {/* User Account Button */}
+          <button
+            onClick={() => setView(view === 'auth' ? 'landing' : 'auth')}
+            className={`relative flex items-center justify-center p-2.5 rounded-full border transition duration-300 active:scale-95 cursor-pointer ${
+              view === 'auth' 
+                ? 'bg-[#FAF6F0] text-[#2C1A11] border-[#2C1A11] shadow-md' 
+                : 'bg-[#2C1A11] text-[#FAF6F0] border-[#2C1A11] hover:bg-[#FAF6F0] hover:text-[#2C1A11] hover:shadow-lg'
+            }`}
+            aria-label="User Account Profile"
+          >
+            <User className="h-4.5 w-4.5" aria-hidden="true" />
+          </button>
+
           <motion.button
             id="navbar-cart-btn"
             onClick={() => setIsCartOpen(true)}

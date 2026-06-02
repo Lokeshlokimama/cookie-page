@@ -12,6 +12,7 @@ import CartPage from './components/CartPage';
 import CTA from './components/CTA';
 import CartDrawer from './components/CartDrawer';
 import Footer from './components/Footer';
+import AuthPage from './components/auth/AuthPage';
 
 // Flying cookie particle overlay component
 function FlyingCookies() {
@@ -89,7 +90,7 @@ function FlyingCookies() {
 function MainApp() {
 
   const scrollContainerRef = useRef(null);
-  const { view } = useCart();
+  const { view, setView } = useCart();
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-[#FAF6F0] selection:bg-[#2C1A11] selection:text-[#FAF6F0]">
@@ -120,8 +121,10 @@ function MainApp() {
           {/* New Rebranded CTA Section */}
           <CTA />
         </>
-      ) : (
+      ) : view === 'cart' ? (
         <CartPage />
+      ) : (
+        <AuthPage onShopNow={() => setView('landing')} />
       )}
 
       {/* Sliding Side-Cart drawer */}
